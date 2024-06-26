@@ -46,6 +46,11 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 issue_colors = ['red', 'blue', 'green', 'orange', 'purple']  # Define colors for issues
                 issue_color_map = {issue: issue_colors[i % len(issue_colors)] for i, issue in enumerate(distinct_issues)}
 
+                # Display legend for the issues
+                st.subheader("Legend")
+                for issue, color in issue_color_map.items():
+                    st.markdown(f'<i style="background:{color}; width:20px; height:20px; display:inline-block;"></i> {issue}', unsafe_allow_html=True)
+
                 # Create a Folium map centered around the mean location of all data
                 m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=5)
 
