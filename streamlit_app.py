@@ -63,9 +63,9 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                                         f"<b>Longitude:</b> {row['Longitude']}<br>" \
                                         f"<b>Issue:</b> {row['Issue']}<br>"
 
-                        folium.CircleMarker(
+                        folium.Circle(
                             location=[row['Latitude'], row['Longitude']],
-                            radius=10,
+                            radius=10,  # Radius in meters
                             popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
                             color=issue_color,
                             fill=True,
