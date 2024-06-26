@@ -112,7 +112,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                         st.warning(f"No data found for Site Name containing '{search_site_name}'.")
 
                 # Display filtered data table outside the filter condition as requested
-                if search_site_name is None or search_site_name == "":
+                else:
                     st.subheader("All Sites Data")
                     st.write(data[['SiteName', 'Latitude', 'Longitude', 'Issue']])
 
