@@ -70,6 +70,47 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 st.subheader("All Sites Map")
                 st_folium(m, width=900, height=700)
 
+                # Allow user to filter by site name to navigate map
+                search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
+                if search_site_name:
+                    filtered_data = data[data['SiteName'].str.contains(search_site_name, case=False)]
+                    if not filtered_data.empty:
+                        # Create a Folium map centered around the mean location of filtered data
+                        m_filtered = folium.Map(location=[filtered_data['Latitude'].mean(), filtered_data['Longitude'].mean()], zoom_start=10)
+
+                        # Display markers for filtered data
+                        for idx, row in filtered_data.iterrows():
+                            # Determine color based on issue category
+                            issue_color = issue_color_map.get(row['Issue'], 'blue')
+
+                            # Create a popup message with site information and issue details
+                            popup_message = f"<b>Site Name:</b> {row['SiteName']}<br>" \
+                                            f"<b>Latitude:</b> {row['Latitude']}<br>" \
+                                            f"<b>Longitude:</b> {row['Longitude']}<br>" \
+                                            f"<b>Issue:</b> {row['Issue']}<br>"
+
+                            folium.Marker(
+                                location=[row['Latitude'], row['Longitude']],
+                                popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
+                                icon=folium.Icon(color=issue_color, icon='cloud')
+                            ).add_to(m_filtered)
+
+                        # Display the filtered map in the Streamlit app
+                        st.subheader(f"Filtered Map for Site Name containing '{search_site_name}'")
+                        st_folium(m_filtered, width=900, height=700)
+
+                        # Display filtered data table
+                        st.subheader(f"Filtered Site Data for Site Name containing '{search_site_name}'")
+                        st.write(filtered_data[['SiteName', 'Latitude', 'Longitude', 'Issue']])
+
+                    else:
+                        st.warning(f"No data found for Site Name containing '{search_site_name}'.")
+
+                    # Display table of filtered site names
+                    st.subheader(f"Filtered Site Names for Site Name containing '{search_site_name}'")
+                    filtered_site_names = filtered_data['SiteName'].unique()
+                    st.write(filtered_site_names)
+
 else:
     if username != "" or password != "":
         st.error("Incorrect username or password. Please try again.")
