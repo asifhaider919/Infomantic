@@ -18,6 +18,9 @@ password = st.text_input("Password", type="password")
 if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
     st.success("Login successful!")
 
+    # Clear username and password inputs after successful login
+    st.empty()
+
     # Upload CSV file for site data
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
