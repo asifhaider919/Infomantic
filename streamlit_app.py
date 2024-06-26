@@ -42,6 +42,16 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 st.write("Data preview:")
                 st.write(data)
 
+                # Allow user to search for site name
+                search_site_name = st.text_input("Enter Site Name to Search:")
+                if search_site_name:
+                    filtered_data = data[data['SiteName'].str.contains(search_site_name, case=False)]
+                    if not filtered_data.empty:
+                        st.write(f"Data for Site Name containing '{search_site_name}':")
+                        st.write(filtered_data)
+                    else:
+                        st.warning(f"No data found for Site Name containing '{search_site_name}'.")
+
                 # Check if the required columns are in the dataframe
                 required_columns = ['SiteName', 'Latitude', 'Longitude', 'Issue']
                 if all(col in data.columns for col in required_columns):
