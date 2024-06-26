@@ -5,8 +5,8 @@ from streamlit_folium import st_folium
 st.title("Google Map in Streamlit")
 
 # Define the initial location and zoom level
-initial_lat = 6.12813  # Latitude for San Francisco
-initial_lon = 1.228882  # Longitude for San Francisco
+initial_lat = 6.13150  # Latitude for San Francisco
+initial_lon = 1.22708  # Longitude for San Francisco
 initial_zoom = 12
 
 # Create a Folium map
@@ -20,4 +20,4 @@ folium.Marker(
 ).add_to(m)
 
 # Display the map in the Streamlit app
-st_folium(m, width=9000, height=800)
+st_folium(m, width=900, height=800)
