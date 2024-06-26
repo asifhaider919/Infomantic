@@ -44,7 +44,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 # Check if the required columns are in the dataframe
                 if 'SiteName' in data.columns and 'Latitude' in data.columns and 'Longitude' in data.columns:
                     # Create a Folium map centered around the mean location
-                    m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=6)
+                    m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=5)
 
                     # Add circle markers to the map with color based on a new column (if it exists)
                     if 'Color' in data.columns:
@@ -54,10 +54,17 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
 
                     for idx, row in data.iterrows():
                         color = row[color_column] if color_column else 'blue'
+                        # Create a popup message with additional information
+                        popup_message = f"<b>Site Name:</b> {row['SiteName']}<br>" \
+                                        f"<b>Latitude:</b> {row['Latitude']}<br>" \
+                                        f"<b>Longitude:</b> {row['Longitude']}<br>"
+                        if 'Info' in data.columns:
+                            popup_message += f"<b>Info:</b> {row['Info']}<br>"
+
                         folium.CircleMarker(
                             location=[row['Latitude'], row['Longitude']],
                             radius=10,
-                            popup=row['SiteName'],
+                            popup=folium.Popup(popup_message, max_width=300),
                             color=color,
                             fill=True,
                             fill_color=color
