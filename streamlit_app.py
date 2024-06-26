@@ -46,21 +46,6 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 issue_colors = ['red', 'blue', 'green', 'orange', 'purple']  # Define colors for issues
                 issue_color_map = {issue: issue_colors[i % len(issue_colors)] for i, issue in enumerate(distinct_issues)}
 
-                # Create a legend for the issues
-                legend_html = """
-                <div style="position: fixed; 
-                            bottom: 50px; left: 50px; width: 150px; height: 120px; 
-                            border:2px solid grey; z-index:9999; font-size:14px;
-                            background-color: white;
-                            ">
-                            <p><b>Legend</b></p>
-                """
-                for issue, color in issue_color_map.items():
-                    legend_html += f'<i style="background:{color}; width:10px; height:10px; display:inline-block;"></i> {issue}<br>'
-                legend_html += "</div>"
-
-                m.get_root().html.add_child(folium.Element(legend_html))
-
                 # Display all site names on the map as markers
                 for idx, row in data.iterrows():
                     # Determine color based on issue category
@@ -77,6 +62,21 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                         popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
                         icon=folium.Icon(color=issue_color, icon='cloud')
                     ).add_to(m)
+
+                # Create a legend for the issues
+                legend_html = """
+                <div style="position: fixed; 
+                            bottom: 50px; left: 50px; width: 150px; height: 120px; 
+                            border:2px solid grey; z-index:9999; font-size:14px;
+                            background-color: white;
+                            ">
+                            <p><b>Legend</b></p>
+                """
+                for issue, color in issue_color_map.items():
+                    legend_html += f'<i style="background:{color}; width:10px; height:10px; display:inline-block;"></i> {issue}<br>'
+                legend_html += "</div>"
+
+                m.get_root().html.add_child(folium.Element(legend_html))
 
                 # Allow user to filter by site name to navigate map
                 search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
@@ -113,7 +113,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                     else:
                         st.warning(f"No data found for Site Name containing '{search_site_name}'.")
 
-                # Display the map in the Streamlit app with increased size
+                # Display the map in the Streamlit app
                 st_folium(m, width=900, height=700)
     else:
         st.info("Please upload a CSV file")
