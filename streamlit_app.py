@@ -60,6 +60,8 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                                         f"<b>Longitude:</b> {row['Longitude']}<br>"
                         if 'Info' in data.columns:
                             popup_message += f"<b>Info:</b> {row['Info']}<br>"
+                        if 'Frame Loss' in data.columns:
+                            popup_message += f"<b>Frame Loss:</b> {row['Frame Loss']}<br>"
 
                         folium.CircleMarker(
                             location=[row['Latitude'], row['Longitude']],
