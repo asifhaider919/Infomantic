@@ -20,4 +20,4 @@ folium.Marker(
 ).add_to(m)
 
 # Display the map in the Streamlit app
-st_folium(m, width=900, height=500)
+st_folium(m, width=700, height=500)
