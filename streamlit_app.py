@@ -44,7 +44,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 # Check if the required columns are in the dataframe
                 if 'SiteName' in data.columns and 'Latitude' in data.columns and 'Longitude' in data.columns:
                     # Create a Folium map centered around the mean location
-                    m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=8)
+                    m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=6)
 
                     # Add circle markers to the map with color based on a new column (if it exists)
                     if 'Color' in data.columns:
