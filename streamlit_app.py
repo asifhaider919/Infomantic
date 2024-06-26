@@ -83,6 +83,9 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 if search_site_name:
                     filtered_data = data[data['SiteName'].str.contains(search_site_name, case=False)]
                     if not filtered_data.empty:
+                        # Display filtered data in a table
+                        st.write(filtered_data)
+
                         # Update map center to the filtered site location
                         site_location = [filtered_data['Latitude'].mean(), filtered_data['Longitude'].mean()]
                         m.location = site_location
