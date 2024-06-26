@@ -53,6 +53,21 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                     issue_colors = ['red', 'blue', 'green', 'orange', 'purple']  # Define colors for issues
                     issue_color_map = {issue: issue_colors[i % len(issue_colors)] for i, issue in enumerate(distinct_issues)}
 
+                    # Create a legend for the issues
+                    legend_html = """
+                    <div style="position: fixed; 
+                                bottom: 50px; left: 50px; width: 150px; height: 120px; 
+                                border:2px solid grey; z-index:9999; font-size:14px;
+                                background-color: white;
+                                ">
+                                <p><b>Legend</b></p>
+                    """
+                    for issue, color in issue_color_map.items():
+                        legend_html += f'<i style="background:{color}; width:10px; height:10px; display:inline-block;"></i> {issue}<br>'
+                    legend_html += "</div>"
+
+                    m.get_root().html.add_child(folium.Element(legend_html))
+
                     for idx, row in data.iterrows():
                         # Determine color based on issue category
                         issue_color = issue_color_map.get(row['Issue'], 'blue')
