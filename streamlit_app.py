@@ -38,62 +38,74 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
             if data.empty:
                 st.error("The uploaded file is empty. Please upload a valid CSV file.")
             else:
-                # Allow user to search for site name
-                search_site_name = st.text_input("Enter Site Name to Search:")
+                # Create a Folium map centered around the mean location of all data
+                m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=5)
+
+                # Extract distinct issues from all data and assign unique colors
+                distinct_issues = data['Issue'].unique()
+                issue_colors = ['red', 'blue', 'green', 'orange', 'purple']  # Define colors for issues
+                issue_color_map = {issue: issue_colors[i % len(issue_colors)] for i, issue in enumerate(distinct_issues)}
+
+                # Create a legend for the issues
+                legend_html = """
+                <div style="position: fixed; 
+                            bottom: 50px; left: 50px; width: 150px; height: 120px; 
+                            border:2px solid grey; z-index:9999; font-size:14px;
+                            background-color: white;
+                            ">
+                            <p><b>Legend</b></p>
+                """
+                for issue, color in issue_color_map.items():
+                    legend_html += f'<i style="background:{color}; width:10px; height:10px; display:inline-block;"></i> {issue}<br>'
+                legend_html += "</div>"
+
+                m.get_root().html.add_child(folium.Element(legend_html))
+
+                # Display all site names on the map as markers
+                for idx, row in data.iterrows():
+                    # Determine color based on issue category
+                    issue_color = issue_color_map.get(row['Issue'], 'blue')
+
+                    # Create a popup message with site information and issue details
+                    popup_message = f"<b>Site Name:</b> {row['SiteName']}<br>" \
+                                    f"<b>Latitude:</b> {row['Latitude']}<br>" \
+                                    f"<b>Longitude:</b> {row['Longitude']}<br>" \
+                                    f"<b>Issue:</b> {row['Issue']}<br>"
+
+                    folium.Marker(
+                        location=[row['Latitude'], row['Longitude']],
+                        popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
+                        icon=folium.Icon(color=issue_color, icon='cloud')
+                    ).add_to(m)
+
+                # Allow user to filter by site name to navigate map
+                search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
                 if search_site_name:
                     filtered_data = data[data['SiteName'].str.contains(search_site_name, case=False)]
                     if not filtered_data.empty:
-                        st.write(f"Data for Site Name containing '{search_site_name}':")
-                        st.write(filtered_data)
+                        # Update map center to mean location of filtered data
+                        m.location = [filtered_data['Latitude'].mean(), filtered_data['Longitude'].mean()]
+
+                        # Clear previous markers and add filtered markers
+                        for idx, row in filtered_data.iterrows():
+                            issue_color = issue_color_map.get(row['Issue'], 'blue')
+                            popup_message = f"<b>Site Name:</b> {row['SiteName']}<br>" \
+                                            f"<b>Latitude:</b> {row['Latitude']}<br>" \
+                                            f"<b>Longitude:</b> {row['Longitude']}<br>" \
+                                            f"<b>Issue:</b> {row['Issue']}<br>"
+
+                            folium.Marker(
+                                location=[row['Latitude'], row['Longitude']],
+                                popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
+                                icon=folium.Icon(color=issue_color, icon='cloud')
+                            ).add_to(m)
+
+                        st.success(f"Filtered to Site Name containing '{search_site_name}'.")
                     else:
                         st.warning(f"No data found for Site Name containing '{search_site_name}'.")
 
-                    # Create a Folium map centered around the mean location of filtered data
-                    m = folium.Map(location=[filtered_data['Latitude'].mean(), filtered_data['Longitude'].mean()], zoom_start=5)
-
-                    # Extract distinct issues from filtered data and assign unique colors
-                    distinct_issues = filtered_data['Issue'].unique()
-                    issue_colors = ['red', 'blue', 'green', 'orange', 'purple']  # Define colors for issues
-                    issue_color_map = {issue: issue_colors[i % len(issue_colors)] for i, issue in enumerate(distinct_issues)}
-
-                    # Create a legend for the issues
-                    legend_html = """
-                    <div style="position: fixed; 
-                                bottom: 50px; left: 50px; width: 150px; height: 120px; 
-                                border:2px solid grey; z-index:9999; font-size:14px;
-                                background-color: white;
-                                ">
-                                <p><b>Legend</b></p>
-                    """
-                    for issue, color in issue_color_map.items():
-                        legend_html += f'<i style="background:{color}; width:10px; height:10px; display:inline-block;"></i> {issue}<br>'
-                    legend_html += "</div>"
-
-                    m.get_root().html.add_child(folium.Element(legend_html))
-
-                    for idx, row in filtered_data.iterrows():
-                        # Determine color based on issue category
-                        issue_color = issue_color_map.get(row['Issue'], 'blue')
-
-                        # Create a popup message with site information and issue details
-                        popup_message = f"<b>Site Name:</b> {row['SiteName']}<br>" \
-                                        f"<b>Latitude:</b> {row['Latitude']}<br>" \
-                                        f"<b>Longitude:</b> {row['Longitude']}<br>" \
-                                        f"<b>Issue:</b> {row['Issue']}<br>"
-
-                        folium.Circle(
-                            location=[row['Latitude'], row['Longitude']],
-                            radius=10,  # Radius in meters
-                            popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
-                            color=issue_color,
-                            fill=True,
-                            fill_color=issue_color
-                        ).add_to(m)
-
-                    # Display the map in the Streamlit app
-                    st_folium(m, width=700, height=500)
-                else:
-                    st.info("Please enter a Site Name to search.")
+                # Display the map in the Streamlit app
+                st_folium(m, width=700, height=500)
     else:
         st.info("Please upload a CSV file")
 else:
