@@ -83,8 +83,9 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 if search_site_name:
                     filtered_data = data[data['SiteName'].str.contains(search_site_name, case=False)]
                     if not filtered_data.empty:
-                        # Update map center to mean location of filtered data
-                        m.location = [filtered_data['Latitude'].mean(), filtered_data['Longitude'].mean()]
+                        # Update map center to the filtered site location
+                        site_location = [filtered_data['Latitude'].mean(), filtered_data['Longitude'].mean()]
+                        m.location = site_location
 
                         # Clear previous markers and add filtered markers
                         for idx, row in filtered_data.iterrows():
@@ -99,6 +100,12 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                                 popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
                                 icon=folium.Icon(color=issue_color, icon='cloud')
                             ).add_to(m)
+
+                        # Zoom in to the selected site with a 10km zoom level
+                        m.fit_bounds([
+                            [site_location[0] - 0.1, site_location[1] - 0.1],
+                            [site_location[0] + 0.1, site_location[1] + 0.1]
+                        ])
 
                         st.success(f"Filtered to Site Name containing '{search_site_name}'.")
                     else:
