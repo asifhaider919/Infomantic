@@ -67,7 +67,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
 
                 # Display the map in the Streamlit app
                 st.subheader("All Sites Map")
-                folium_static(m, width=900, height=700)
+                st.write(m._repr_html_(), unsafe_allow_html=True)
 
                 # Allow user to filter by site name to navigate map
                 search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
@@ -96,7 +96,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
 
                         # Display the filtered map in the Streamlit app
                         st.subheader(f"Filtered Map for Site Name containing '{search_site_name}'")
-                        folium_static(m_filtered, width=900, height=700)
+                        st.write(m_filtered._repr_html_(), unsafe_allow_html=True)
 
                         # Display filtered data table
                         st.subheader(f"Filtered Site Data for Site Name containing '{search_site_name}'")
