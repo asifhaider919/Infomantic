@@ -25,6 +25,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
         try:
             # Try to read the CSV file with UTF-8 encoding
             data = pd.read_csv(uploaded_file, encoding='utf-8')
+            print("Columns in CSV file:", data.columns.tolist())  # Debugging: Print column names
         except UnicodeDecodeError:
             # If there's a UnicodeDecodeError, try reading with ISO-8859-1 encoding
             data = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
@@ -42,13 +43,14 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 st.write(data)
 
                 # Check if the required columns are in the dataframe
-                if 'SiteName' in data.columns and 'Latitude' in data.columns and 'Longitude' in data.columns and 'Issue' in data.columns:
+                required_columns = ['SiteName', 'Latitude', 'Longitude', 'Issue']
+                if all(col in data.columns for col in required_columns):
+                    # Create a Folium map centered around the mean location
+                    m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=5)
+
                     # Extract distinct issues and assign unique colors
                     distinct_issues = data['Issue'].unique()
                     issue_color_map = {issue: folium.utilities.get_random_color() for issue in distinct_issues}
-
-                    # Create a Folium map centered around the mean location
-                    m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=5)
 
                     for idx, row in data.iterrows():
                         # Determine color based on issue category
