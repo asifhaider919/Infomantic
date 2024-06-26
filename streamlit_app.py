@@ -19,7 +19,7 @@ if uploaded_file is not None:
 
     # Check if the required columns are in the dataframe
     if 'SiteName' in data.columns and 'Latitude' in data.columns and 'Longitude' in data.columns:
-        # Create a Folium map centered around the first location
+        # Create a Folium map centered around the mean location
         m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=5)
 
         # Add circle markers to the map
