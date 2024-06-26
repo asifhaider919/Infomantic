@@ -42,40 +42,37 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 st.write(data)
 
                 # Check if the required columns are in the dataframe
-                if 'SiteName' in data.columns and 'Latitude' in data.columns and 'Longitude' in data.columns:
+                if 'SiteName' in data.columns and 'Latitude' in data.columns and 'Longitude' in data.columns and 'Issue' in data.columns:
+                    # Extract distinct issues and assign unique colors
+                    distinct_issues = data['Issue'].unique()
+                    issue_color_map = {issue: folium.utilities.get_random_color() for issue in distinct_issues}
+
                     # Create a Folium map centered around the mean location
                     m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=5)
 
-                    # Add circle markers to the map with color based on a new column (if it exists)
-                    if 'Color' in data.columns:
-                        color_column = 'Color'
-                    else:
-                        color_column = None
-
                     for idx, row in data.iterrows():
-                        color = row[color_column] if color_column else 'blue'
-                        # Create a popup message with additional information
+                        # Determine color based on issue category
+                        issue_color = issue_color_map.get(row['Issue'], 'blue')
+
+                        # Create a popup message with site information and issue details
                         popup_message = f"<b>Site Name:</b> {row['SiteName']}<br>" \
                                         f"<b>Latitude:</b> {row['Latitude']}<br>" \
-                                        f"<b>Longitude:</b> {row['Longitude']}<br>"
-                        if 'Info' in data.columns:
-                            popup_message += f"<b>Info:</b> {row['Info']}<br>"
-                        if 'Frame Loss' in data.columns:
-                            popup_message += f"<b>Frame Loss:</b> {row['Frame Loss']}<br>"
+                                        f"<b>Longitude:</b> {row['Longitude']}<br>" \
+                                        f"<b>Issue:</b> {row['Issue']}<br>"
 
                         folium.CircleMarker(
                             location=[row['Latitude'], row['Longitude']],
                             radius=10,
                             popup=folium.Popup(popup_message, max_width=300),
-                            color=color,
+                            color=issue_color,
                             fill=True,
-                            fill_color=color
+                            fill_color=issue_color
                         ).add_to(m)
 
                     # Display the map in the Streamlit app
                     st_folium(m, width=700, height=500)
                 else:
-                    st.error("CSV file must contain 'SiteName', 'Latitude', and 'Longitude' columns")
+                    st.error("CSV file must contain 'SiteName', 'Latitude', 'Longitude', and 'Issue' columns")
     else:
         st.info("Please upload a CSV file")
 else:
