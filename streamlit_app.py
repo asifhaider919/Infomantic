@@ -116,6 +116,9 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                     st.subheader("All Sites Data")
                     st.write(data[['SiteName', 'Latitude', 'Longitude', 'Issue']])
 
+    else:
+        st.info("Please upload a CSV file")
+
 else:
     if username != "" or password != "":
         st.error("Incorrect username or password. Please try again.")
