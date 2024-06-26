@@ -113,8 +113,8 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                     else:
                         st.warning(f"No data found for Site Name containing '{search_site_name}'.")
 
-                # Display the map in the Streamlit app
-                st_folium(m, width=700, height=500)
+                # Display the map in the Streamlit app with increased size
+                st_folium(m, width=900, height=700)
     else:
         st.info("Please upload a CSV file")
 else:
