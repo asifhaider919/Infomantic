@@ -66,7 +66,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                         folium.CircleMarker(
                             location=[row['Latitude'], row['Longitude']],
                             radius=10,
-                            popup=folium.Popup(popup_message, max_width=300),
+                            popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
                             color=issue_color,
                             fill=True,
                             fill_color=issue_color
