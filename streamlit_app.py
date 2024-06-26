@@ -34,15 +34,21 @@ if uploaded_file is not None:
                 # Create a Folium map centered around the mean location
                 m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=5)
 
-                # Add circle markers to the map
+                # Add circle markers to the map with color based on a new column (if it exists)
+                if 'Color' in data.columns:
+                    color_column = 'Color'
+                else:
+                    color_column = None
+
                 for idx, row in data.iterrows():
+                    color = row[color_column] if color_column else 'blue'
                     folium.CircleMarker(
                         location=[row['Latitude'], row['Longitude']],
                         radius=10,
                         popup=row['SiteName'],
-                        color='blue',
+                        color=color,
                         fill=True,
-                        fill_color='blue'
+                        fill_color=color
                     ).add_to(m)
 
                 # Display the map in the Streamlit app
