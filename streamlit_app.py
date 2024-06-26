@@ -68,7 +68,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
 
                 # Display the map in the Streamlit app
                 st.subheader("All Sites Map")
-                st_folium(m, width=900, height=700)
+                folium_static(m, width=900, height=700)
 
                 # Allow user to filter by site name to navigate map
                 search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
@@ -97,7 +97,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
 
                         # Display the filtered map in the Streamlit app
                         st.subheader(f"Filtered Map for Site Name containing '{search_site_name}'")
-                        st_folium(m_filtered, width=900, height=700)
+                        folium_static(m_filtered, width=900, height=700)
 
                         # Display filtered data table
                         st.subheader(f"Filtered Site Data for Site Name containing '{search_site_name}'")
@@ -110,6 +110,11 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                     st.subheader(f"Filtered Site Names for Site Name containing '{search_site_name}'")
                     filtered_site_names = filtered_data['SiteName'].unique()
                     st.write(filtered_site_names)
+
+                # Display legend for issue categories
+                st.subheader("Legend")
+                for issue, color in issue_color_map.items():
+                    st.markdown(f'<i style="background:{color}; border-radius: 50%; display:inline-block; width: 12px; height: 12px;"></i> {issue}', unsafe_allow_html=True)
 
 else:
     if username != "" or password != "":
