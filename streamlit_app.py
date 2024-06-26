@@ -110,7 +110,6 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                             [site_location[0] + 0.1, site_location[1] + 0.1]
                         ])
 
-                        st.success(f"Filtered to Site Name containing '{search_site_name}'.")
                     else:
                         st.warning(f"No data found for Site Name containing '{search_site_name}'.")
 
