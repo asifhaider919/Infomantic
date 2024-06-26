@@ -46,48 +46,30 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                 issue_colors = ['red', 'blue', 'green', 'orange', 'purple']  # Define colors for issues
                 issue_color_map = {issue: issue_colors[i % len(issue_colors)] for i, issue in enumerate(distinct_issues)}
 
-                # Create a legend for the issues
-                st.subheader("Legend")
-                for issue, color in issue_color_map.items():
-                    st.markdown(f'<i style="background:{color}; width:20px; height:20px; display:inline-block;"></i> {issue}', unsafe_allow_html=True)
+                # Create a Folium map centered around the mean location of all data
+                m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=5)
 
-                # Allow user to filter by site name to navigate map
-                search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
-                if search_site_name:
-                    filtered_data = data[data['SiteName'].str.contains(search_site_name, case=False)]
-                    if not filtered_data.empty:
-                        # Display filtered data in a table
-                        st.subheader(f"Filtered to Site Name containing '{search_site_name}'.")
-                        st.write(filtered_data)
+                # Display markers for all sites
+                for idx, row in data.iterrows():
+                    # Determine color based on issue category
+                    issue_color = issue_color_map.get(row['Issue'], 'blue')
 
-                        # Create a Folium map centered around the mean location of filtered data
-                        m = folium.Map(location=[filtered_data['Latitude'].mean(), filtered_data['Longitude'].mean()], zoom_start=5)
+                    # Create a popup message with site information and issue details
+                    popup_message = f"<b>Site Name:</b> {row['SiteName']}<br>" \
+                                    f"<b>Latitude:</b> {row['Latitude']}<br>" \
+                                    f"<b>Longitude:</b> {row['Longitude']}<br>" \
+                                    f"<b>Issue:</b> {row['Issue']}<br>"
 
-                        # Display markers for filtered data
-                        for idx, row in filtered_data.iterrows():
-                            # Determine color based on issue category
-                            issue_color = issue_color_map.get(row['Issue'], 'blue')
+                    folium.Marker(
+                        location=[row['Latitude'], row['Longitude']],
+                        popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
+                        icon=folium.Icon(color=issue_color, icon='cloud')
+                    ).add_to(m)
 
-                            # Create a popup message with site information and issue details
-                            popup_message = f"<b>Site Name:</b> {row['SiteName']}<br>" \
-                                            f"<b>Latitude:</b> {row['Latitude']}<br>" \
-                                            f"<b>Longitude:</b> {row['Longitude']}<br>" \
-                                            f"<b>Issue:</b> {row['Issue']}<br>"
+                # Display the map in the Streamlit app
+                st.subheader("All Sites Map")
+                st_folium(m, width=900, height=700)
 
-                            folium.Marker(
-                                location=[row['Latitude'], row['Longitude']],
-                                popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
-                                icon=folium.Icon(color=issue_color, icon='cloud')
-                            ).add_to(m)
-
-                        # Display the map in the Streamlit app
-                        st.subheader("Filtered Map")
-                        st_folium(m, width=900, height=700)
-                    else:
-                        st.warning(f"No data found for Site Name containing '{search_site_name}'.")
-
-    else:
-        st.info("Please upload a CSV file")
 else:
     if username != "" or password != "":
         st.error("Incorrect username or password. Please try again.")
