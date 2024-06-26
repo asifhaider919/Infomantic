@@ -38,10 +38,6 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
             if data.empty:
                 st.error("The uploaded file is empty. Please upload a valid CSV file.")
             else:
-                # Display the data
-                st.write("Data preview:")
-                st.write(data)
-
                 # Allow user to search for site name
                 search_site_name = st.text_input("Enter Site Name to Search:")
                 if search_site_name:
@@ -52,14 +48,11 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                     else:
                         st.warning(f"No data found for Site Name containing '{search_site_name}'.")
 
-                # Check if the required columns are in the dataframe
-                required_columns = ['SiteName', 'Latitude', 'Longitude', 'Issue']
-                if all(col in data.columns for col in required_columns):
-                    # Create a Folium map centered around the mean location
-                    m = folium.Map(location=[data['Latitude'].mean(), data['Longitude'].mean()], zoom_start=5)
+                    # Create a Folium map centered around the mean location of filtered data
+                    m = folium.Map(location=[filtered_data['Latitude'].mean(), filtered_data['Longitude'].mean()], zoom_start=5)
 
-                    # Extract distinct issues and assign unique colors
-                    distinct_issues = data['Issue'].unique()
+                    # Extract distinct issues from filtered data and assign unique colors
+                    distinct_issues = filtered_data['Issue'].unique()
                     issue_colors = ['red', 'blue', 'green', 'orange', 'purple']  # Define colors for issues
                     issue_color_map = {issue: issue_colors[i % len(issue_colors)] for i, issue in enumerate(distinct_issues)}
 
@@ -78,7 +71,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
 
                     m.get_root().html.add_child(folium.Element(legend_html))
 
-                    for idx, row in data.iterrows():
+                    for idx, row in filtered_data.iterrows():
                         # Determine color based on issue category
                         issue_color = issue_color_map.get(row['Issue'], 'blue')
 
@@ -100,7 +93,7 @@ if username == CORRECT_USERNAME and password == CORRECT_PASSWORD:
                     # Display the map in the Streamlit app
                     st_folium(m, width=700, height=500)
                 else:
-                    st.error("CSV file must contain 'SiteName', 'Latitude', 'Longitude', and 'Issue' columns")
+                    st.info("Please enter a Site Name to search.")
     else:
         st.info("Please upload a CSV file")
 else:
