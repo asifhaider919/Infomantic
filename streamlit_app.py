@@ -1,23 +1,32 @@
 import streamlit as st
-import folium
-from streamlit_folium import st_folium
 
-st.title("Google Map in Streamlit")
+# Set the title of the app
+st.title("Simple Calculator")
 
-# Define the initial location and zoom level
-initial_lat = 37.7749  # Latitude for San Francisco
-initial_lon = -122.4194  # Longitude for San Francisco
-initial_zoom = 12
+# Create input fields for the two numbers
+num1 = st.number_input("Enter the first number", value=0.0, step=1.0)
+num2 = st.number_input("Enter the second number", value=0.0, step=1.0)
 
-# Create a Folium map
-m = folium.Map(location=[initial_lat, initial_lon], zoom_start=initial_zoom)
+# Create a dropdown for the operations
+operation = st.selectbox("Select operation", ("Add", "Subtract", "Multiply", "Divide"))
 
-# Add a marker for the initial location
-folium.Marker(
-    location=[initial_lat, initial_lon],
-    popup="San Francisco",
-    icon=folium.Icon(icon="cloud"),
-).add_to(m)
+# Perform the calculation based on the selected operation
+result = None
+if operation == "Add":
+    result = num1 + num2
+elif operation == "Subtract":
+    result = num1 - num2
+elif operation == "Multiply":
+    result = num1 * num2
+elif operation == "Divide":
+    if num2 != 0:
+        result = num1 / num2
+    else:
+        st.error("Cannot divide by zero!")
 
-# Display the map in the Streamlit app
-st_folium(m, width=700, height=500)
+# Display the result
+if result is not None:
+    st.write(f"The result of {operation.lower()}ing {num1} and {num2} is {result}")
+
+# Add an optional footer
+st.write("Powered by Streamlit")
