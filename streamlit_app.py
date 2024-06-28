@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 # Define correct username and password
 CORRECT_USERNAME = "admin"
@@ -29,5 +30,15 @@ if not st.session_state['logged_in']:
     if st.button("Login"):
         login()
 else:
-    # If logged in, display welcome message
+    # If logged in, display welcome message and file upload option
     st.title("Welcome!")
+    st.write("Please upload an XLS file.")
+    
+    uploaded_file = st.file_uploader("Choose an XLS file", type="xls")
+    
+    if uploaded_file is not None:
+        # Save the uploaded file
+        with open("Input_Data.xls", "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        
+        st.success("File saved as Input_Data.xls")
