@@ -27,21 +27,39 @@ if uploaded_file is not None:
         if 'Lat' not in data.columns or 'Lon' not in data.columns or 'Site' not in data.columns:
             st.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
         else:
+            # Sidebar filter by Site Name
+            st.sidebar.subheader("Filter by Site Name")
+            search_site_name = st.sidebar.text_input("Enter Site Name")
+            
             # Create initial map centered around the mean location of all data
             m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=3)
 
-            # Display markers for all data
-            for idx, row in data.iterrows():
-                # Create a popup message with site information
-                popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                f"<b>Longitude:</b> {row['Lon']}<br>"
+            # Display markers for filtered data or all data if not filtered
+            if search_site_name:
+                filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
+                for idx, row in filtered_data.iterrows():
+                    # Create a popup message with site information
+                    popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                    f"<b>Longitude:</b> {row['Lon']}<br>"
 
-                folium.Marker(
-                    location=[row['Lat'], row['Lon']],
-                    popup=folium.Popup(popup_message, max_width=400),
-                    icon=folium.Icon(color='blue', icon='cloud')
-                ).add_to(m)
+                    folium.Marker(
+                        location=[row['Lat'], row['Lon']],
+                        popup=folium.Popup(popup_message, max_width=400),
+                        icon=folium.Icon(color='blue', icon='cloud')
+                    ).add_to(m)
+            else:
+                for idx, row in data.iterrows():
+                    # Create a popup message with site information
+                    popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                    f"<b>Longitude:</b> {row['Lon']}<br>"
+
+                    folium.Marker(
+                        location=[row['Lat'], row['Lon']],
+                        popup=folium.Popup(popup_message, max_width=400),
+                        icon=folium.Icon(color='blue', icon='cloud')
+                    ).add_to(m)
 
             # Display the map in the Streamlit app
             folium_static(m, width=900, height=700)
