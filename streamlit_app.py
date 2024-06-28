@@ -60,18 +60,8 @@ else:
         if 'Site' not in data.columns or 'Lat' not in data.columns or 'Lon' not in data.columns:
             st.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
         else:
-            # Extract distinct issues from all data and assign unique colors
-            if 'Issue' in data.columns:
-                distinct_issues = data['Issue'].unique()
-                issue_colors = ['red', 'blue', 'green', 'orange', 'purple']  # Define colors for issues
-                issue_color_map = {issue: issue_colors[i % len(issue_colors)] for i, issue in enumerate(distinct_issues)}
-
-                # Create a legend for the issues
-                st.subheader("Legend")
-                for issue, color in issue_color_map.items():
-                    st.markdown(f'<i style="background:{color}; width:20px; height:20px; display:inline-block;"></i> {issue}', unsafe_allow_html=True)
-            else:
-                issue_color_map = {}
+            # Set a default color for all markers
+            marker_color = 'blue'
 
             # Allow user to filter by site name to navigate map
             search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
@@ -81,9 +71,6 @@ else:
 
             # Display markers for all data
             for idx, row in data.iterrows():
-                # Determine color based on issue category, default to blue
-                issue_color = issue_color_map.get(row.get('Issue', 'No Issue'), 'blue')
-
                 # Create a popup message with site information and issue details
                 popup_message = f"<b>Site Name:</b> {row['Site']}<br>" \
                                 f"<b>Latitude:</b> {row['Lat']}<br>" \
@@ -97,7 +84,7 @@ else:
                 folium.Marker(
                     location=[row['Lat'], row['Lon']],
                     popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
-                    icon=folium.Icon(color=issue_color, icon='cloud')
+                    icon=folium.Icon(color=marker_color, icon='cloud')
                 ).add_to(m)
 
             # Display the map in the Streamlit app
@@ -113,4 +100,23 @@ else:
                     # Zoom in on the map to the first filtered location
                     folium_map = folium.Map(location=[filtered_data['Lat'].mean(), filtered_data['Lon'].mean()], zoom_start=10)
                     for idx, row in filtered_data.iterrows():
-                        issue_color = issue_color_
+                        popup_message = f"<b>Site Name:</b> {row['Site']}<br>" \
+                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                        f"<b>Longitude:</b> {row['Lon']}<br>"
+
+                        additional_columns = row.index.difference(['Site', 'Lat', 'Lon'])
+                        for col in additional_columns:
+                            popup_message += f"<b>{col}:</b> {row[col]}<br>"
+
+                        folium.Marker(
+                            location=[row['Lat'], row['Lon']],
+                            popup=folium.Popup(popup_message, max_width=400),
+                            icon=folium.Icon(color=marker_color, icon='cloud')
+                        ).add_to(folium_map)
+
+                    st_folium(folium_map, width=900, height=700)
+                else:
+                    st.warning(f"No data found for Site Name containing '{search_site_name}'.")
+
+    else:
+        st.info("Please upload a CSV file")
