@@ -57,4 +57,21 @@ if uploaded_file is not None:
                     
                     # Fit the map to the bounds
                     m.fit_bounds(bounds)
-     
+            else:
+                for idx, row in data.iterrows():
+                    # Create a popup message with site information
+                    popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                    f"<b>Longitude:</b> {row['Lon']}<br>"
+
+                    folium.Marker(
+                        location=[row['Lat'], row['Lon']],
+                        popup=folium.Popup(popup_message, max_width=400),
+                        icon=folium.Icon(color='blue', icon='cloud')
+                    ).add_to(m)
+
+            # Display the map in the Streamlit app
+            folium_static(m, width=900, height=700)
+
+    except Exception as e:
+        st.error(f"An error occurred while processing the file: {e}")
