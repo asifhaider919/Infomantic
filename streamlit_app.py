@@ -47,7 +47,7 @@ if uploaded_file is not None:
                         # Determine marker icon
                         if row['Site'] in filtered_data['Site'].values:
                             # Use a custom square icon for filtered sites
-                            icon = folium.Icon(color='blue', icon='square', prefix='fa')
+                            icon = folium.Icon(color='red', icon='square', prefix='fa')
                         else:
                             # Default symbol for other sites
                             icon = folium.Icon(color='blue', icon='cloud')
