@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import folium
-from streamlit_folium import st_folium
+from streamlit_folium import folium_static
 
 # Title of the app
 st.title("Upload File to Plot Sites on Map")
@@ -24,8 +24,8 @@ if uploaded_file is not None:
             data = pd.read_csv(uploaded_file)
         
         # Ensure the required columns are present
-        if 'Lat' not in data.columns or 'Lon' not in data.columns:
-            st.error("The uploaded file must contain 'Lat' and 'Lon' columns.")
+        if 'Lat' not in data.columns or 'Lon' not in data.columns or 'Site' not in data.columns:
+            st.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
         else:
             # Create a Folium map centered around the mean location of all data
             m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=5)
@@ -45,7 +45,7 @@ if uploaded_file is not None:
 
             # Display the map in the Streamlit app
             st.subheader("Map of Sites")
-            st_folium(m, width=900, height=700)
+            folium_static(m, width=900, height=700)
 
             # Allow user to filter by site name to navigate map
             st.sidebar.subheader("Filter by Site Name")
@@ -53,10 +53,6 @@ if uploaded_file is not None:
             if search_site_name:
                 filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
                 if not filtered_data.empty:
-                    # Display filtered data in a table
-                    st.subheader(f"Filtered Data for Site Name containing '{search_site_name}'")
-                    st.write(filtered_data)
-
                     # Create a Folium map centered around the mean location of filtered data
                     folium_map = folium.Map(location=[filtered_data['Lat'].mean(), filtered_data['Lon'].mean()], zoom_start=10)
                     
@@ -72,8 +68,9 @@ if uploaded_file is not None:
                             icon=folium.Icon(color='blue', icon='cloud')
                         ).add_to(folium_map)
 
+                    # Display the filtered map in the Streamlit app
                     st.subheader(f"Filtered Map for Site Name containing '{search_site_name}'")
-                    st_folium(folium_map, width=900, height=700)
+                    folium_static(folium_map, width=900, height=700)
                 else:
                     st.warning(f"No data found for Site Name containing '{search_site_name}'.")
     
