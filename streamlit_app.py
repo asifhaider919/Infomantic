@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
-import os
 
 # Title of the app
 st.title("Upload File to Plot Sites on Map")
@@ -49,7 +48,8 @@ if uploaded_file is not None:
             st_folium(m, width=900, height=700)
 
             # Allow user to filter by site name to navigate map
-            search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
+            st.sidebar.subheader("Filter by Site Name")
+            search_site_name = st.sidebar.text_input("Enter Site Name to Filter and Navigate Map:")
             if search_site_name:
                 filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
                 if not filtered_data.empty:
