@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import os
 
 # Define correct username and password
 CORRECT_USERNAME = "admin"
@@ -32,13 +33,17 @@ if not st.session_state['logged_in']:
 else:
     # If logged in, display welcome message and file upload option
     st.title("Welcome!")
-    st.write("Please upload an XLS file.")
+    st.write("Please upload an XLS, XLSX, or CSV file.")
     
-    uploaded_file = st.file_uploader("Choose an XLS file", type="xls")
+    uploaded_file = st.file_uploader("Choose a file", type=["xls", "xlsx", "csv"])
     
     if uploaded_file is not None:
-        # Save the uploaded file
-        with open("Input_Data.xls", "wb") as f:
+        # Determine the file extension
+        file_extension = os.path.splitext(uploaded_file.name)[1]
+        
+        # Save the uploaded file with the correct extension
+        file_path = f"Input_Data{file_extension}"
+        with open(file_path, "wb") as f:
             f.write(uploaded_file.getbuffer())
         
-        st.success("File saved as Input_Data.xls")
+        st.success(f"File saved as {file_path}")
