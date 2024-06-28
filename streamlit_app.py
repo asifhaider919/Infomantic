@@ -66,8 +66,8 @@ if uploaded_file is not None:
                         ).add_to(marker_cluster)
 
                     # Update the map to center on the filtered data
-                    m.center = [filtered_data['Lat'].mean(), filtered_data['Lon'].mean()]
-                    m.zoom = 10  # Zoom in to the filtered site
+                    m.location = [filtered_data['Lat'].mean(), filtered_data['Lon'].mean()]
+                    m.zoom_start = 10  # Zoom in to the filtered site
 
                     # Display the updated map in the Streamlit app
                     folium_static(m, width=900, height=700)
