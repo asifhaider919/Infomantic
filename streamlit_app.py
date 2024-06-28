@@ -51,18 +51,19 @@ else:
         st.success(f"File saved as {file_path}")
 
         # Read the uploaded file into a pandas DataFrame
-        if file_extension in ['.xls', '.xlsx']:
-            data = pd.read_excel(uploaded_file)
-        else:
-            data = pd.read_csv(uploaded_file)
+        try:
+            if file_extension in ['.xls', '.xlsx']:
+                data = pd.read_excel(uploaded_file)
+            else:
+                data = pd.read_csv(uploaded_file)
+        except Exception as e:
+            st.error(f"An error occurred while reading the file: {e}")
+            st.stop()
         
         # Ensure the required columns are present
         if 'Site' not in data.columns or 'Lat' not in data.columns or 'Lon' not in data.columns:
             st.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
         else:
-            # Set a default color for all markers
-            marker_color = 'blue'
-
             # Allow user to filter by site name to navigate map
             search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
 
@@ -84,7 +85,7 @@ else:
                 folium.Marker(
                     location=[row['Lat'], row['Lon']],
                     popup=folium.Popup(popup_message, max_width=400),  # Increase max_width as needed
-                    icon=folium.Icon(color=marker_color, icon='cloud')
+                    icon=folium.Icon(color='blue', icon='cloud')
                 ).add_to(m)
 
             # Display the map in the Streamlit app
@@ -99,24 +100,4 @@ else:
 
                     # Zoom in on the map to the first filtered location
                     folium_map = folium.Map(location=[filtered_data['Lat'].mean(), filtered_data['Lon'].mean()], zoom_start=10)
-                    for idx, row in filtered_data.iterrows():
-                        popup_message = f"<b>Site Name:</b> {row['Site']}<br>" \
-                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                        f"<b>Longitude:</b> {row['Lon']}<br>"
-
-                        additional_columns = row.index.difference(['Site', 'Lat', 'Lon'])
-                        for col in additional_columns:
-                            popup_message += f"<b>{col}:</b> {row[col]}<br>"
-
-                        folium.Marker(
-                            location=[row['Lat'], row['Lon']],
-                            popup=folium.Popup(popup_message, max_width=400),
-                            icon=folium.Icon(color=marker_color, icon='cloud')
-                        ).add_to(folium_map)
-
-                    st_folium(folium_map, width=900, height=700)
-                else:
-                    st.warning(f"No data found for Site Name containing '{search_site_name}'.")
-
-    else:
-        st.info("Please upload a CSV file")
+                    for idx, row in filter
