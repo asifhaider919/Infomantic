@@ -43,7 +43,13 @@ if uploaded_file is not None:
                     bounds = [(first_site['Lat'] - 0.05, first_site['Lon'] - 0.05), 
                               (first_site['Lat'] + 0.05, first_site['Lon'] + 0.05)]
                     
-                    for idx, row in filtered_data.iterrows():
+                    for idx, row in data.iterrows():
+                        # Determine marker icon
+                        if row['Site'] in filtered_data['Site'].values:
+                            icon = 'star'  # Different symbol for filtered site
+                        else:
+                            icon = 'cloud'  # Default symbol for other sites
+
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                         f"<b>Latitude:</b> {row['Lat']}<br>" \
@@ -52,7 +58,7 @@ if uploaded_file is not None:
                         folium.Marker(
                             location=[row['Lat'], row['Lon']],
                             popup=folium.Popup(popup_message, max_width=400),
-                            icon=folium.Icon(color='blue', icon='cloud')
+                            icon=folium.Icon(color='blue', icon=icon)
                         ).add_to(m)
                     
                     # Fit the map to the bounds
