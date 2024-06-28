@@ -29,6 +29,7 @@ if uploaded_file is not None:
         else:
             # Create a Folium map centered around the mean location of all data
             m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=5)
+            marker_cluster = folium.plugins.MarkerCluster().add_to(m)
 
             # Display markers for all data
             for idx, row in data.iterrows():
@@ -41,24 +42,21 @@ if uploaded_file is not None:
                     location=[row['Lat'], row['Lon']],
                     popup=folium.Popup(popup_message, max_width=400),
                     icon=folium.Icon(color='blue', icon='cloud')
-                ).add_to(m)
+                ).add_to(marker_cluster)
 
             # Display the map in the Streamlit app
-            st.subheader("Map of Sites")
             folium_static(m, width=900, height=700)
 
             # Allow user to filter by site name to navigate map
             st.sidebar.subheader("Filter by Site Name")
             search_site_name = st.sidebar.text_input("Enter Site Name to Filter and Navigate Map:")
+
             if search_site_name:
                 filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
                 if not filtered_data.empty:
-                    # Zoom in to the location of the filtered site
-                    center_lat = filtered_data['Lat'].mean()
-                    center_lon = filtered_data['Lon'].mean()
-
                     # Clear previous map and create a new one centered on the filtered site
-                    m = folium.Map(location=[center_lat, center_lon], zoom_start=10)
+                    m = folium.Map(location=[filtered_data['Lat'].mean(), filtered_data['Lon'].mean()], zoom_start=10)
+                    marker_cluster = folium.plugins.MarkerCluster().add_to(m)
 
                     # Display markers for all data again on the updated map
                     for idx, row in data.iterrows():
@@ -70,7 +68,7 @@ if uploaded_file is not None:
                             location=[row['Lat'], row['Lon']],
                             popup=folium.Popup(popup_message, max_width=400),
                             icon=folium.Icon(color='blue', icon='cloud')
-                        ).add_to(m)
+                        ).add_to(marker_cluster)
 
                     # Display markers for filtered data with a different color or style
                     for idx, row in filtered_data.iterrows():
@@ -82,13 +80,12 @@ if uploaded_file is not None:
                             location=[row['Lat'], row['Lon']],
                             popup=folium.Popup(popup_message, max_width=400),
                             icon=folium.Icon(color='red', icon='cloud')  # Example: Use red color for filtered sites
-                        ).add_to(m)
+                        ).add_to(marker_cluster)
 
                     # Display the updated map in the Streamlit app
-                    st.subheader(f"Filtered Map for Site Name containing '{search_site_name}'")
                     folium_static(m, width=900, height=700)
                 else:
                     st.warning(f"No data found for Site Name containing '{search_site_name}'.")
-    
+
     except Exception as e:
         st.error(f"An error occurred while processing the file: {e}")
