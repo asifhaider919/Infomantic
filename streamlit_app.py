@@ -47,32 +47,5 @@ if uploaded_file is not None:
             # Display the map in the Streamlit app
             folium_static(m, width=900, height=700)
 
-            # Allow user to filter by site name to navigate map
-            search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
-            if search_site_name:
-                filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
-                if not filtered_data.empty:
-                    # Clear previous markers and update the map to center on the filtered site
-                    marker_cluster.clear_layers()
-                    for idx, row in filtered_data.iterrows():
-                        popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                        f"<b>Longitude:</b> {row['Lon']}<br>"
-
-                        folium.Marker(
-                            location=[row['Lat'], row['Lon']],
-                            popup=folium.Popup(popup_message, max_width=400),
-                            icon=folium.Icon(color='red', icon='cloud')  # Example: Use red color for filtered sites
-                        ).add_to(marker_cluster)
-
-                    # Update the map to center on the filtered data
-                    m.location = [filtered_data['Lat'].mean(), filtered_data['Lon'].mean()]
-                    m.zoom_start = 10  # Zoom in to the filtered site
-
-                    # Display the updated map in the Streamlit app
-                    folium_static(m, width=900, height=700)
-                else:
-                    st.warning(f"No data found for Site Name containing '{search_site_name}'.")
-
     except Exception as e:
         st.error(f"An error occurred while processing the file: {e}")
