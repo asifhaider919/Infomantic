@@ -58,19 +58,7 @@ if uploaded_file is not None:
                     m = folium.Map(location=[filtered_data['Lat'].mean(), filtered_data['Lon'].mean()], zoom_start=10)
                     marker_cluster = folium.plugins.MarkerCluster().add_to(m)
 
-                    # Display markers for all data again on the updated map
-                    for idx, row in data.iterrows():
-                        popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                        f"<b>Longitude:</b> {row['Lon']}<br>"
-
-                        folium.Marker(
-                            location=[row['Lat'], row['Lon']],
-                            popup=folium.Popup(popup_message, max_width=400),
-                            icon=folium.Icon(color='blue', icon='cloud')
-                        ).add_to(marker_cluster)
-
-                    # Display markers for filtered data with a different color or style
+                    # Display markers for filtered data
                     for idx, row in filtered_data.iterrows():
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                         f"<b>Latitude:</b> {row['Lat']}<br>" \
