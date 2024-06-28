@@ -27,7 +27,7 @@ if uploaded_file is not None:
         if 'Lat' not in data.columns or 'Lon' not in data.columns or 'Site' not in data.columns:
             st.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
         else:
-            # Create a Folium map centered around the mean location of all data
+            # Create initial map centered around the mean location of all data
             m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=5)
             marker_cluster = folium.plugins.MarkerCluster().add_to(m)
 
@@ -52,11 +52,8 @@ if uploaded_file is not None:
             if search_site_name:
                 filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
                 if not filtered_data.empty:
-                    # Clear previous map and create a new one centered on the filtered site
-                    m = folium.Map(location=[filtered_data['Lat'].mean(), filtered_data['Lon'].mean()], zoom_start=10)
-                    marker_cluster = folium.plugins.MarkerCluster().add_to(m)
-
-                    # Display markers for filtered data
+                    # Clear previous markers and update the map to center on the filtered site
+                    marker_cluster.clear_layers()
                     for idx, row in filtered_data.iterrows():
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                         f"<b>Latitude:</b> {row['Lat']}<br>" \
@@ -67,6 +64,10 @@ if uploaded_file is not None:
                             popup=folium.Popup(popup_message, max_width=400),
                             icon=folium.Icon(color='red', icon='cloud')  # Example: Use red color for filtered sites
                         ).add_to(marker_cluster)
+
+                    # Update the map to center on the filtered data
+                    m.center = [filtered_data['Lat'].mean(), filtered_data['Lon'].mean()]
+                    m.zoom = 10  # Zoom in to the filtered site
 
                     # Display the updated map in the Streamlit app
                     folium_static(m, width=900, height=700)
