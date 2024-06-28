@@ -48,9 +48,7 @@ if uploaded_file is not None:
             folium_static(m, width=900, height=700)
 
             # Allow user to filter by site name to navigate map
-            st.sidebar.subheader("Filter by Site Name")
-            search_site_name = st.sidebar.text_input("Enter Site Name to Filter and Navigate Map:")
-
+            search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
             if search_site_name:
                 filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
                 if not filtered_data.empty:
