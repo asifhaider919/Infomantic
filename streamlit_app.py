@@ -57,8 +57,10 @@ if uploaded_file is not None:
                     st.subheader(f"Filtered Data for Site Name containing '{search_site_name}'")
                     st.write(filtered_data)
 
-                    # Zoom in on the map to the first filtered location
+                    # Create a Folium map centered around the mean location of filtered data
                     folium_map = folium.Map(location=[filtered_data['Lat'].mean(), filtered_data['Lon'].mean()], zoom_start=10)
+                    
+                    # Display markers for filtered data
                     for idx, row in filtered_data.iterrows():
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                         f"<b>Latitude:</b> {row['Lat']}<br>" \
