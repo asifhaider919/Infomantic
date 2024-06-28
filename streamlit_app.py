@@ -64,9 +64,6 @@ else:
         if 'Site' not in data.columns or 'Lat' not in data.columns or 'Lon' not in data.columns:
             st.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
         else:
-            # Allow user to filter by site name to navigate map
-            search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
-
             # Create a Folium map centered around the mean location of all data
             m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=5)
 
@@ -91,6 +88,8 @@ else:
             # Display the map in the Streamlit app
             st_folium(m, width=900, height=700)
 
+            # Allow user to filter by site name to navigate map
+            search_site_name = st.text_input("Enter Site Name to Filter and Navigate Map:")
             if search_site_name:
                 filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
                 if not filtered_data.empty:
@@ -100,4 +99,23 @@ else:
 
                     # Zoom in on the map to the first filtered location
                     folium_map = folium.Map(location=[filtered_data['Lat'].mean(), filtered_data['Lon'].mean()], zoom_start=10)
-                    for idx, row in filter
+                    for idx, row in filtered_data.iterrows():
+                        popup_message = f"<b>Site Name:</b> {row['Site']}<br>" \
+                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                        f"<b>Longitude:</b> {row['Lon']}<br>"
+
+                        additional_columns = row.index.difference(['Site', 'Lat', 'Lon'])
+                        for col in additional_columns:
+                            popup_message += f"<b>{col}:</b> {row[col]}<br>"
+
+                        folium.Marker(
+                            location=[row['Lat'], row['Lon']],
+                            popup=folium.Popup(popup_message, max_width=400),
+                            icon=folium.Icon(color='blue', icon='cloud')
+                        ).add_to(folium_map)
+
+                    st_folium(folium_map, width=900, height=700)
+                else:
+                    st.warning(f"No data found for Site Name containing '{search_site_name}'.")
+    else:
+        st.info("Please upload a file")
