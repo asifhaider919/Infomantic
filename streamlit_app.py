@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import folium_static
+from folium.plugins import MarkerCluster
 
 # Title of the app
 st.title("Upload File to Plot Sites on Map")
@@ -28,8 +29,8 @@ if uploaded_file is not None:
             st.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
         else:
             # Create initial map centered around the mean location of all data
-            m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=5)
-            marker_cluster = folium.plugins.MarkerCluster().add_to(m)
+            m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=3)
+            marker_cluster = MarkerCluster().add_to(m)
 
             # Display markers for all data
             for idx, row in data.iterrows():
