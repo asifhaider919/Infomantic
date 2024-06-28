@@ -46,9 +46,11 @@ if uploaded_file is not None:
                     for idx, row in data.iterrows():
                         # Determine marker icon
                         if row['Site'] in filtered_data['Site'].values:
-                            icon = 'star'  # Different symbol for filtered site
+                            # Use a custom square icon for filtered sites
+                            icon = folium.Icon(color='blue', icon='square', prefix='fa')
                         else:
-                            icon = 'cloud'  # Default symbol for other sites
+                            # Default symbol for other sites
+                            icon = folium.Icon(color='blue', icon='cloud')
 
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
@@ -58,7 +60,7 @@ if uploaded_file is not None:
                         folium.Marker(
                             location=[row['Lat'], row['Lon']],
                             popup=folium.Popup(popup_message, max_width=400),
-                            icon=folium.Icon(color='blue', icon=icon)
+                            icon=icon
                         ).add_to(m)
                     
                     # Fit the map to the bounds
