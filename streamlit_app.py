@@ -29,7 +29,7 @@ if uploaded_file is not None:
             
             # Create an interactive plot using Plotly
             fig = px.line(item_data, x='DateTime', y=item_data.columns[2:], title=f'Item: {item}')
-            fig.update_layout(xaxis_title='DateTime', yaxis_title='Metrics')
+            fig.update_layout(xaxis_title='', yaxis_title='')
             st.plotly_chart(fig)
     else:
         st.error("'items' column not found in the uploaded file. Please check the column names.")
