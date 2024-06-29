@@ -15,9 +15,6 @@ if uploaded_file is not None:
     # Load the Excel file
     df = pd.read_excel(uploaded_file)
 
-    # Display the columns of the DataFrame for debugging
-    st.write("Columns in the uploaded file:", df.columns.tolist())
-
     # Convert the DateTime column to pandas datetime type
     df['DateTime'] = pd.to_datetime(df['DateTime'])
 
