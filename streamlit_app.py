@@ -7,8 +7,9 @@ st.set_page_config(layout="wide")
 
 st.title('Metrics for Each Item')
 
-# File upload
-uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
+# Sidebar for file upload
+st.sidebar.header("File Upload")
+uploaded_file = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
 
 if uploaded_file is not None:
     # Load the Excel file
