@@ -17,9 +17,10 @@ if uploaded_file is not None:
     # Convert the DateTime column to pandas datetime type
     df['DateTime'] = pd.to_datetime(df['DateTime'])
 
-    # Sliders for controlling chart dimensions
-    chart_width = st.slider("Chart Width", min_value=500, max_value=1500, value=800)
-    chart_height = st.slider("Chart Height", min_value=300, max_value=1000, value=600)
+    # Sidebar for controlling chart dimensions
+    st.sidebar.header("Chart Settings")
+    chart_width = st.sidebar.slider("Chart Width", min_value=500, max_value=1500, value=800)
+    chart_height = st.sidebar.slider("Chart Height", min_value=300, max_value=1000, value=600)
 
     # Ensure the 'items' column exists
     if 'items' in df.columns:
