@@ -17,6 +17,10 @@ if uploaded_file is not None:
     # Convert the DateTime column to pandas datetime type
     df['DateTime'] = pd.to_datetime(df['DateTime'])
 
+    # Sliders for controlling chart dimensions
+    chart_width = st.slider("Chart Width", min_value=500, max_value=1500, value=800)
+    chart_height = st.slider("Chart Height", min_value=300, max_value=1000, value=600)
+
     # Ensure the 'items' column exists
     if 'items' in df.columns:
         # Get unique items
@@ -29,7 +33,12 @@ if uploaded_file is not None:
             
             # Create an interactive plot using Plotly
             fig = px.line(item_data, x='DateTime', y=item_data.columns[2:], title=f'Item: {item}')
-            fig.update_layout(xaxis_title='', yaxis_title='')
+            fig.update_layout(
+                xaxis_title='',
+                yaxis_title='',
+                width=chart_width,
+                height=chart_height
+            )
             st.plotly_chart(fig)
     else:
         st.error("'items' column not found in the uploaded file. Please check the column names.")
