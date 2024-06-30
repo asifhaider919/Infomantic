@@ -39,7 +39,7 @@ if uploaded_file is not None:
             min_value=pd.Timestamp(df['DateTime'].min()),
             max_value=pd.Timestamp(df['DateTime'].max()),
             value=(pd.Timestamp(df['DateTime'].min()), pd.Timestamp(df['DateTime'].max())),
-            format="MM/DD/YYYY"
+            format="YYYY-MM-DD HH:mm:ss"
         )
 
         # Convert start_date and end_date to datetime64[ns]
@@ -71,15 +71,6 @@ if uploaded_file is not None:
             selected_metrics = st.sidebar.multiselect("Select Metrics", filtered_metrics, default=filtered_metrics)
 
         if len(selected_metrics) > 0:
-            # Vertical line position selector
-            vertical_line_position = st.sidebar.slider(
-                "Vertical Line Position",
-                min_value=start_date,
-                max_value=end_date,
-                value=start_date,
-                format="MM/DD/YYYY"
-            )
-
             # Create two columns for displaying charts side by side
             col1, col2 = st.columns(2)
 
@@ -111,9 +102,6 @@ if uploaded_file is not None:
                     xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                     yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 )
-
-                # Add vertical line to the plot
-                fig.add_vline(x=vertical_line_position, line_dash="dash", line_color="red")
 
                 # Alternate placing charts in col1 and col2
                 if i % 2 == 1:
