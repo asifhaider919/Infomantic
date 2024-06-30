@@ -7,7 +7,7 @@ from streamlit_folium import folium_static
 st.set_page_config(layout="wide")
 
 # Logo image URL (replace with your actual logo URL)
-logo_url = "https://www.nokia.com/sites/default/files/styles/scale_720_not_convert_webp/public/2023-02/nokia-refreshed-logo-2_1.png"
+logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuoM7k8aZGJNWdL39qNWuJMzGPrHyoIIR2sA&s"
 
 # Display the logo at the top of the sidebar
 st.sidebar.image(logo_url, width=200)
