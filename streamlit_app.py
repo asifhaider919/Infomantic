@@ -13,7 +13,7 @@ logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Kj80VCFDZV3e
 st.sidebar.image(logo_url, width=200)
 
 # Title of the app with reduced size
-# st.markdown("<h2 style='text-align: left;'>Network Capacity Limitation / Frame Loss</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: left;'>Network Capacity Limitation / Frame Loss</h2>", unsafe_allow_html=True)
 
 # Sidebar for file upload
 uploaded_file = st.sidebar.file_uploader("Choose a xls/xslx file", type=["csv", "xls", "xlsx"])
@@ -44,7 +44,7 @@ if uploaded_file is not None:
 
             # Assign light green to a specific category
             # Example: Assign 'lightgreen' to the category 'OK'
-            colors[categories.index('OK')] = 'green'
+            colors[categories.index('OK')] = 'lightgreen'
 		
             # Sidebar filter by Site Name
             search_site_name = st.sidebar.text_input("Enter Site Name")
@@ -119,7 +119,7 @@ if uploaded_file is not None:
                 st.sidebar.markdown(f'<span style="color: {color}; font-size: 1.5em">&#9632;</span> {category}', unsafe_allow_html=True)
 				
             # Add developer information at the bottom of the map
-            footer_text = '<div style="position: fixed; bottom: 50px; width: 100%; text-align: center; font-size: 12px; color: black;">Developer: Asif Haider</div>'
+            footer_text = '<div style="position: absolute; bottom: 50px; width: 100%; text-align: center; font-size: 14px; color: black;">Developer: Asif Haider</div>'
             footer = folium.Html(footer_text, script=True)
             footer_popup = folium.Popup(footer, parse_html=True)
             folium.Marker(
