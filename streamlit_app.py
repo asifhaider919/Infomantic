@@ -3,6 +3,9 @@ import pandas as pd
 import folium
 from streamlit_folium import folium_static
 
+# Set page configuration
+st.set_page_config(layout="wide")
+
 # Title of the app
 st.title("Upload File to Plot Sites on Map")
 
