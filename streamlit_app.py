@@ -50,26 +50,26 @@ if uploaded_file is not None:
 
     # Ensure the 'items' column exists
     if 'items' in df.columns:
-        # Multiselect dropdown for selecting metrics
-        all_metrics_option = "All Metrics"
-        available_metrics = df.columns[2:].tolist()
+        # Multiselect dropdown for selecting items
+        all_items_option = "All Items"
+        available_items = df['items'].unique().tolist()
 
-        # Checkbox to display all metrics
-        display_all_metrics = st.sidebar.checkbox("Display All Metrics")
+        # Checkbox to display all items
+        display_all_items = st.sidebar.checkbox("Display All Items")
 
-        if display_all_metrics:
-            selected_metrics = available_metrics
+        if display_all_items:
+            selected_items = available_items
         else:
-            # Search box for filtering metrics by typing
-            filter_text = st.sidebar.text_input("Filter Metrics", "")
+            # Search box for filtering items by typing
+            filter_text = st.sidebar.text_input("Filter Items", "")
 
-            # Filter metrics for autocomplete suggestions
-            filtered_metrics = [metric for metric in available_metrics if filter_text.lower() in metric.lower()]
+            # Filter items for autocomplete suggestions
+            filtered_items = [item for item in available_items if filter_text.lower() in item.lower()]
 
             # Show autocomplete suggestions in a selectbox
-            selected_metrics = st.sidebar.multiselect("Select Metrics", filtered_metrics, default=filtered_metrics)
+            selected_items = st.sidebar.multiselect("Select Items", filtered_items, default=filtered_items)
 
-        if len(selected_metrics) > 0:
+        if len(selected_items) > 0:
             # Slider for vertical line position
             vertical_line_position = st.sidebar.slider(
                 "Vertical Line Position",
@@ -82,16 +82,16 @@ if uploaded_file is not None:
             # Create two columns for displaying charts side by side
             col1, col2 = st.columns(2)
 
-            # Iterate through each selected metric
-            for i, col in enumerate(selected_metrics, start=1):
-                if col == all_metrics_option:
-                    continue  # Skip "All Metrics" option in individual charts
+            # Iterate through each selected item
+            for i, item in enumerate(selected_items, start=1):
+                if item == all_items_option:
+                    continue  # Skip "All Items" option in individual charts
 
-                # Filter data based on selected date range and metric
-                filtered_df = df[(df['DateTime'] >= start_date) & (df['DateTime'] <= end_date)]
+                # Filter data based on selected date range and item
+                filtered_df = df[(df['DateTime'] >= start_date) & (df['DateTime'] <= end_date) & (df['items'] == item)]
 
-                # Create an interactive plot using Plotly for each metric
-                fig = px.line(filtered_df, x='DateTime', y=col, color='items', labels={'items': col})  # Use column name as legend
+                # Create an interactive plot using Plotly for each item
+                fig = px.line(filtered_df, x='DateTime', y='value', labels={'value': item})  # Use item name as y-axis label
                 fig.update_layout(
                     xaxis_title='',
                     yaxis_title='',
@@ -121,6 +121,6 @@ if uploaded_file is not None:
                     col2.plotly_chart(fig)
 
         else:
-            st.warning("Please select at least one metric to display.")
+            st.warning("Please select at least one item to display.")
     else:
         st.error("'items' column not found in the uploaded file. Please check the column names.")
