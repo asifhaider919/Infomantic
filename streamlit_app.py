@@ -56,9 +56,9 @@ if uploaded_file is not None:
                     for idx, row in data.iterrows():
                         # Determine marker size
                         if row['Site'] in filtered_data['Site'].values:
-							radius = 12
+							radius=12
                         else:
-							radius = 6
+							radius=6
 
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
