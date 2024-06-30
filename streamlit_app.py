@@ -54,6 +54,19 @@ if uploaded_file is not None:
                         else:
                             color = 'blue'
 
+            # Define categories for the legend based on 'Issue' column
+            categories = data['Issue'].unique().tolist()
+            colors = ['blue', 'red', 'green', 'orange', 'purple']  # Adjust colors as needed
+
+            # Display markers for all data
+            for idx, row in data.iterrows():
+                # Determine marker color based on 'Issue' category
+                category = row['Issue']
+                if category in categories:
+                    color = colors[categories.index(category) % len(colors)]
+                else:
+                    color = 'blue'  # Default color if category not found
+				
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                         f"<b>Latitude:</b> {row['Lat']}<br>" \
@@ -88,6 +101,11 @@ if uploaded_file is not None:
                         popup=folium.Popup(popup_message, max_width=400)
                     ).add_to(m)
 
+            # Display the legend in the sidebar
+            st.sidebar.subheader("Legend")
+            for idx, category in enumerate(categories):
+                st.sidebar.checkbox(category, value=True, key=f"checkbox_{idx}")
+				
             # Display the map in the Streamlit app
             folium_static(m, width=1200, height=700)
 
