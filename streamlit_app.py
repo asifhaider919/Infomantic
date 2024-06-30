@@ -158,4 +158,3 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
     
     except Exception as e:
         st.sidebar.error(f"An error occurred while processing the file: {e}")
-
