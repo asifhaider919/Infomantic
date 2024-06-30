@@ -6,7 +6,7 @@ from streamlit_folium import folium_static
 # Set page configuration
 st.set_page_config(layout="wide")
 
-				  
+	  
 # Title of the app with reduced size
 st.markdown("<h2 style='text-align: left;'>Map Display</h2>", unsafe_allow_html=True)
 
@@ -35,7 +35,7 @@ if uploaded_file is not None:
         else:
             # Define categories for the legend based on 'Issue' column
             categories = data['Issue'].unique().tolist()
-            colors = ['blue', 'red', 'green', 'orange', 'purple', 'black']  # Adjust colors as needed
+            colors = ['blue', 'red', 'green', 'orange', 'purple',black]  # Adjust colors as needed
 
             # Sidebar filter by Site Name
             st.sidebar.subheader("Filter by Site Name")
@@ -99,11 +99,16 @@ if uploaded_file is not None:
                         popup=folium.Popup(popup_message, max_width=400)
                     ).add_to(m)
 
-            # Display the legend in the sidebar
+            # Display the legend in the sidebar with colored checkboxes
             st.sidebar.subheader("Legend")
             for idx, category in enumerate(categories):
-                st.sidebar.checkbox(category, value=True, key=f"checkbox_{idx}")
-				
+                color = colors[idx % len(colors)]  # Get color for category
+                checkbox = st.sidebar.checkbox(category, value=True, key=f"checkbox_{idx}", 
+                                               help=f"Show {category}", 
+                                               on_change=None,
+                                               args=None,
+                                               kwargs=None)
+                checkbox.subheader(f'## legend{category}')
             # Display the map in the Streamlit app
             folium_static(m, width=1200, height=700)
 
