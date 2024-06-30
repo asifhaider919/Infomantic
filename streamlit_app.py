@@ -91,7 +91,7 @@ if uploaded_file is not None:
                 filtered_df = df[(df['DateTime'] >= start_date) & (df['DateTime'] <= end_date)]
 
                 # Create an interactive plot using Plotly for each metric
-                fig = px.line(filtered_df, x='DateTime', y=col, color='items', labels={'items': col, 'y': f"<span style='color:blue'>{col}</span>"})  # Use column name as legend
+                fig = px.line(filtered_df, x='DateTime', y=col, color='items', labels={'items': col})  # Use column name as legend
                 fig.update_layout(
                     xaxis_title='',
                     yaxis_title='',
@@ -106,9 +106,10 @@ if uploaded_file is not None:
                         y=1.02,  # Adjust vertical position
                         xanchor='right',  # Anchor legend to the right of the plot area
                         x=1,  # Adjust horizontal position
+                        font=dict(color="blue")  # Set legend font color to pink
                     ),
-                    xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                    yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+                    xaxis=dict(showgrid=True, zeroline=False),  # Hide gridlines and zeroline
+                    yaxis=dict(showgrid=True, zeroline=False),  # Hide gridlines and zeroline
                 )
 
                 # Add vertical line to the plot
