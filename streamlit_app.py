@@ -122,7 +122,7 @@ if uploaded_file is not None:
             folium_static(m, width=1200, height=700)
             
             # Display developer information aligned to the left and close to the map
-            st.markdown("<div style='text-align: left; font-size: 14px; color: black; margin-top: 10px;'>Developer: Asif Haider</div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align: left; font-size: 14px; color: black; margin-top: 10px;'>NPO Nokia - Togo</div>", unsafe_allow_html=True)
 
     except Exception as e:
         st.sidebar.error(f"An error occurred while processing the file: {e}")
