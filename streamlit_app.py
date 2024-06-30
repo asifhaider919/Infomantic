@@ -26,6 +26,9 @@ if uploaded_file is not None:
         # Get unique items
         items = df['items'].unique()
 
+        # Create two columns for displaying charts side by side
+        col1, col2 = st.columns(2)
+
         # Iterate through each metric column (starting from the 3rd column)
         for col in df.columns[2:]:
             # Create an interactive plot using Plotly for each metric
@@ -35,15 +38,18 @@ if uploaded_file is not None:
                 yaxis_title='',
                 width=chart_width,
                 height=chart_height,
-                margin=dict(l=0, r=40, t=0, b=0),  # Adjust margin to add padding
-                paper_bgcolor='rgb(240, 240, 240)', # Make background transparent
+                margin=dict(l=0, r=0, t=0, b=0),  # Set margin to 0 on all sides
+                paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
                 plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
                 legend=dict(orientation='h', yanchor='top', y=1.1, xanchor='left', x=0.5),  # Legend position
                 xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                # Set plot area border color and width
-
             )
-            st.plotly_chart(fig)
+
+            # Place each chart in its respective column
+            if col1.empty():
+                col1.plotly_chart(fig)
+            else:
+                col2.plotly_chart(fig)
     else:
         st.error("'items' column not found in the uploaded file. Please check the column names.")
