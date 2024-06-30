@@ -36,8 +36,13 @@ if uploaded_file is not None:
                 width=chart_width,
                 height=chart_height,
                 margin=dict(l=0, r=0, t=0, b=0),  # Adjust margin to add padding
-                paper_bgcolor='rgba(1,0,0,10000)',  # Make background transparent
-                plot_bgcolor='rgba(1,0,0,10000)',   # Make plot area transparent
+                paper_bgcolor='rgba(1,0,0,0)',  # Make background transparent
+                plot_bgcolor='rgba(1,0,0,0)',   # Make plot area transparent
+
+                legend=dict(orientation='h', yanchor='top', y=1.1, xanchor='left', x=0.5),  # Legend position
+                xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+                yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+                
             )
             st.plotly_chart(fig)
     else:
