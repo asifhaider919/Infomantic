@@ -6,8 +6,10 @@ from streamlit_folium import folium_static
 # Set page configuration
 st.set_page_config(layout="wide")
 
+				  
 # Title of the app with reduced size
 st.markdown("<h2 style='text-align: left;'>Map Display</h2>", unsafe_allow_html=True)
+
 
 # Sidebar for file upload
 st.sidebar.header("File Upload")
@@ -51,7 +53,7 @@ if uploaded_file is not None:
                     bounds = [(first_site['Lat'] - 0.05, first_site['Lon'] - 0.05), 
                               (first_site['Lat'] + 0.05, first_site['Lon'] + 0.05)]
                     
-                    for idx, row in filtered_data.iterrows():
+                    for idx, row in data.iterrows():
                         # Determine marker size
                         radius = 12 if row['Site'] in filtered_data['Site'].values else 6
 
@@ -64,8 +66,6 @@ if uploaded_file is not None:
                                         f"<b>Latitude:</b> {row['Lat']}<br>" \
                                         f"<b>Longitude:</b> {row['Lon']}<br>"
 
-																				
-	   
                         folium.CircleMarker(
                             location=[row['Lat'], row['Lon']],
                             radius=radius,
@@ -82,10 +82,7 @@ if uploaded_file is not None:
                 for idx, row in data.iterrows():
                     # Determine marker color based on 'Issue' category
                     category = row['Issue']
-											  
                     color = colors[categories.index(category) % len(colors)] if category in categories else 'blue'
-						 
-																			 
 
                     # Create a popup message with site information
                     popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
