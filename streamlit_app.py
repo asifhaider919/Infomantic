@@ -7,7 +7,9 @@ from streamlit_folium import folium_static
 st.set_page_config(layout="wide")
 
 # Title of the app
-st.title("Upload File to Plot Sites on Map")
+# Title of the app with reduced size
+st.markdown("<h2 style='text-align: center;'>Upload File to Plot Sites on Map</h2>", unsafe_allow_html=True)
+
 
 # Sidebar for file upload
 st.sidebar.header("File Upload")
