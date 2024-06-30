@@ -58,29 +58,33 @@ if uploaded_file is not None:
 
             # Check if selected_tab exists in filtered_df.columns
             if selected_tab in filtered_df.columns:
-                # Create an interactive plot using Plotly for each metric
-                fig = px.line(filtered_df, x='DateTime', y=selected_tab, color='items', labels={'items': selected_tab})  # Use column name as legend
-                fig.update_layout(
-                    xaxis_title='',
-                    yaxis_title='',
-                    width=chart_width,
-                    height=chart_height,
-                    margin=dict(l=0, r=40, t=0, b=0),  # Set margin to 40px on the right
-                    paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
-                    plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
-                    legend=dict(
-                        orientation='h',  # Horizontal orientation
-                        yanchor='bottom',  # Anchor legend to the bottom of the plot area
-                        y=1.02,  # Adjust vertical position
-                        xanchor='right',  # Anchor legend to the right of the plot area
-                        x=1  # Adjust horizontal position
-                    ),
-                    xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                    yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                )
+                # Check if 'PLMN' column exists in filtered_df
+                if 'PLMN' in filtered_df.columns:
+                    # Create an interactive plot using Plotly for each metric
+                    fig = px.line(filtered_df, x='DateTime', y=selected_tab, color='PLMN', labels={'PLMN': selected_tab})  # Use column name as legend
+                    fig.update_layout(
+                        xaxis_title='',
+                        yaxis_title='',
+                        width=chart_width,
+                        height=chart_height,
+                        margin=dict(l=0, r=40, t=40, b=0),  # Adjust margins as needed
+                        paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
+                        plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
+                        legend=dict(
+                            orientation='h',  # Horizontal orientation
+                            yanchor='bottom',  # Anchor legend to the bottom of the plot area
+                            y=1.02,  # Adjust vertical position
+                            xanchor='right',  # Anchor legend to the right of the plot area
+                            x=1  # Adjust horizontal position
+                        ),
+                        xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+                        yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+                    )
 
-                # Plotly chart
-                st.plotly_chart(fig)
+                    # Plotly chart
+                    st.plotly_chart(fig)
+                else:
+                    st.error("'PLMN' column not found in filtered data. Please select another tab.")
             else:
                 st.error(f"{selected_tab} column not found in filtered data. Please select another tab.")
         else:
