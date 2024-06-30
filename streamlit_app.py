@@ -6,8 +6,10 @@ from streamlit_folium import folium_static
 # Set page configuration
 st.set_page_config(layout="wide")
 
+# Title of the app
 # Title of the app with reduced size
 st.markdown("<h2 style='text-align: left;'>Map Display</h2>", unsafe_allow_html=True)
+
 
 # Sidebar for file upload
 st.sidebar.header("File Upload")
@@ -38,19 +40,34 @@ if uploaded_file is not None:
             # Create initial map centered around the mean location of all data
             m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=7)
 
-            # Define categories for the legend based on 'Issue' column
-            categories = data['Issue'].unique().tolist()
-            colors = ['blue', 'red', 'green', 'orange', 'purple']  # Adjust colors as needed
+            # Display markers for filtered data or all data if not filtered
+            if search_site_name:
+                filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
+                if not filtered_data.empty:
+                    # Calculate bounds to zoom to 10km around the first filtered site
+                    first_site = filtered_data.iloc[0]
+                    bounds = [(first_site['Lat'] - 0.05, first_site['Lon'] - 0.05), 
+                              (first_site['Lat'] + 0.05, first_site['Lon'] + 0.05)]
+                    
+                    for idx, row in data.iterrows():
+                        # Determine marker color
+                        if row['Site'] in filtered_data['Site'].values:
+                            color = 'red'
+                        else:
+                            color = 'blue'
+																	  
+														
+																							
 
-            # Display markers for all data
-            for idx, row in data.iterrows():
-                # Determine marker color based on 'Issue' category
-                category = row['Issue']
-                if category in categories:
-                    color = colors[categories.index(category) % len(colors)]
-                else:
-                    color = 'blue'  # Default color if category not found
-                
+               
+											
+																  
+									   
+										  
+																			
+					 
+																		 
+				
                 # Create a popup message with site information
                 popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                 f"<b>Latitude:</b> {row['Lat']}<br>" \
@@ -65,11 +82,25 @@ if uploaded_file is not None:
                     fill_opacity=0.4,
                     popup=folium.Popup(popup_message, max_width=400)
                 ).add_to(m)
+                    
+                    # Fit the map to the bounds
+                    m.fit_bounds(bounds)
+            else:
+                for idx, row in data.iterrows():
+                    # Create a popup message with site information
+                    popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                    f"<b>Longitude:</b> {row['Lon']}<br>"
 
-            # Display the legend in the sidebar
-            st.sidebar.subheader("Legend")
-            for idx, category in enumerate(categories):
-                st.sidebar.checkbox(category, value=True, key=f"checkbox_{idx}")
+                    folium.CircleMarker(
+                        location=[row['Lat'], row['Lon']],
+                        radius=6,
+                        color='blue',
+                        fill=True,
+                        fill_color='blue',
+                        fill_opacity=0.4,
+                        popup=folium.Popup(popup_message, max_width=400)
+                    ).add_to(m)
 
             # Display the map in the Streamlit app
             folium_static(m, width=1200, height=700)
