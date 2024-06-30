@@ -38,7 +38,7 @@ if uploaded_file is not None:
             colors = ['green', 'orange', 'red', 'blue', 'purple', 'black', 'magenta', 'yellow', 'lime', 'teal']
             
             # Sidebar filter by Site Name
-            st.sidebar.subheader("Filter by Site Name")
+            #st.sidebar.subheader("Filter by Site Name")
             search_site_name = st.sidebar.text_input("Enter Site Name")
             
             # Create initial map centered around the mean location of all data
