@@ -1,4 +1,4 @@
-import streamlit as st
+ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from datetime import datetime
@@ -69,17 +69,7 @@ if uploaded_file is not None:
             # Show autocomplete suggestions in a selectbox
             selected_metrics = st.sidebar.multiselect("Select Metrics", filtered_metrics, default=filtered_metrics)
 
-        # Filter for 'items' column
-        all_items_option = "All Items"
-        items = df['items'].unique().tolist()
-        display_all_items = st.sidebar.checkbox("Display All Items")
-
-        if display_all_items:
-            selected_items = items
-        else:
-            selected_items = st.sidebar.multiselect("Select Items", items, default=items)
-
-        if len(selected_metrics) > 0 and len(selected_items) > 0:
+        if len(selected_metrics) > 0:
             # Slider for vertical line position
             vertical_line_position = st.sidebar.slider(
                 "Vertical Line Position",
@@ -97,45 +87,40 @@ if uploaded_file is not None:
                 if col == all_metrics_option:
                     continue  # Skip "All Metrics" option in individual charts
 
-                # Iterate through each selected item
-                for j, item in enumerate(selected_items, start=1):
-                    if item == all_items_option:
-                        continue  # Skip "All Items" option in individual charts
+                # Filter data based on selected date range and metric
+                filtered_df = df[(df['DateTime'] >= start_date) & (df['DateTime'] <= end_date)]
 
-                    # Filter data based on selected date range, metric, and item
-                    filtered_df = df[(df['DateTime'] >= start_date) & (df['DateTime'] <= end_date) & (df['items'] == item)]
+                # Create an interactive plot using Plotly for each metric
+                fig = px.line(filtered_df, x='DateTime', y=col, color='items', labels={'items': col})  # Use column name as legend
+                fig.update_layout(
+                    xaxis_title='',
+                    yaxis_title='',
+                    width=chart_width,
+                    height=chart_height,
+                    margin=dict(l=0, r=40, t=0, b=0),  # Set margin to 40px on the right
+                    paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
+                    plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
+                    legend=dict(
+                        orientation='h',  # Horizontal orientation
+                        yanchor='bottom',  # Anchor legend to the bottom of the plot area
+                        y=1.02,  # Adjust vertical position
+                        xanchor='right',  # Anchor legend to the right of the plot area
+                        x=1  # Adjust horizontal position
+                    ),
+                    xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+                    yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+                )
 
-                    # Create an interactive plot using Plotly for each metric and item combination
-                    fig = px.line(filtered_df, x='DateTime', y=col, labels={'DateTime': 'Date', col: col}, title=f"{col} for {item}")
-                    fig.update_layout(
-                        xaxis_title='',
-                        yaxis_title='',
-                        width=chart_width,
-                        height=chart_height,
-                        margin=dict(l=0, r=40, t=0, b=0),  # Set margin to 40px on the right
-                        paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
-                        plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
-                        legend=dict(
-                            orientation='h',  # Horizontal orientation
-                            yanchor='bottom',  # Anchor legend to the bottom of the plot area
-                            y=1.02,  # Adjust vertical position
-                            xanchor='right',  # Anchor legend to the right of the plot area
-                            x=1  # Adjust horizontal position
-                        ),
-                        xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                        yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                    )
+                # Add vertical line to the plot
+                fig.add_vline(x=filtered_df.iloc[vertical_line_position]['DateTime'], line_width=2, line_dash="dash", line_color="red")
 
-                    # Add vertical line to the plot
-                    fig.add_vline(x=filtered_df.iloc[vertical_line_position]['DateTime'], line_width=2, line_dash="dash", line_color="red")
-
-                    # Alternate placing charts in col1 and col2
-                    if (i * j) % 2 == 1:
-                        col1.plotly_chart(fig)
-                    else:
-                        col2.plotly_chart(fig)
+                # Alternate placing charts in col1 and col2
+                if i % 2 == 1:
+                    col1.plotly_chart(fig)
+                else:
+                    col2.plotly_chart(fig)
 
         else:
-            st.warning("Please select at least one metric and one item to display.")
+            st.warning("Please select at least one metric to display.")
     else:
         st.error("'items' column not found in the uploaded file. Please check the column names.")
