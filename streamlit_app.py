@@ -31,6 +31,10 @@ if uploaded_file is not None:
         if 'Lat' not in data.columns or 'Lon' not in data.columns or 'Site' not in data.columns:
             st.sidebar.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
         else:
+            # Define categories for the legend based on 'Issue' column
+            categories = data['Issue'].unique().tolist()
+            colors = ['blue', 'red', 'green', 'orange', 'purple']  # Adjust colors as needed
+
             # Sidebar filter by Site Name
             st.sidebar.subheader("Filter by Site Name")
             search_site_name = st.sidebar.text_input("Enter Site Name")
@@ -47,26 +51,14 @@ if uploaded_file is not None:
                     bounds = [(first_site['Lat'] - 0.05, first_site['Lon'] - 0.05), 
                               (first_site['Lat'] + 0.05, first_site['Lon'] + 0.05)]
                     
-                    for idx, row in data.iterrows():
-                        # Determine marker color
-                        if row['Site'] in filtered_data['Site'].values:
-                            color = 'red'
+                    for idx, row in filtered_data.iterrows():
+                        # Determine marker color based on 'Issue' category
+                        category = row['Issue']
+                        if category in categories:
+                            color = colors[categories.index(category) % len(colors)]
                         else:
-                            color = 'blue'
+                            color = 'blue'  # Default color if category not found
 
-            # Define categories for the legend based on 'Issue' column
-            categories = data['Issue'].unique().tolist()
-            colors = ['blue', 'red', 'green', 'orange', 'purple']  # Adjust colors as needed
-
-            # Display markers for all data
-            for idx, row in data.iterrows():
-                # Determine marker color based on 'Issue' category
-                category = row['Issue']
-                if category in categories:
-                    color = colors[categories.index(category) % len(colors)]
-                else:
-                    color = 'blue'  # Default color if category not found
-				
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                         f"<b>Latitude:</b> {row['Lat']}<br>" \
@@ -86,28 +78,4 @@ if uploaded_file is not None:
                     m.fit_bounds(bounds)
             else:
                 for idx, row in data.iterrows():
-                    # Create a popup message with site information
-                    popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                    f"<b>Longitude:</b> {row['Lon']}<br>"
-
-                    folium.CircleMarker(
-                        location=[row['Lat'], row['Lon']],
-                        radius=6,
-                        color='blue',
-                        fill=True,
-                        fill_color='blue',
-                        fill_opacity=0.4,
-                        popup=folium.Popup(popup_message, max_width=400)
-                    ).add_to(m)
-
-            # Display the legend in the sidebar
-            st.sidebar.subheader("Legend")
-            for idx, category in enumerate(categories):
-                st.sidebar.checkbox(category, value=True, key=f"checkbox_{idx}")
-				
-            # Display the map in the Streamlit app
-            folium_static(m, width=1200, height=700)
-
-    except Exception as e:
-        st.sidebar.error(f"An error occurred while processing the file: {e}")
+                    # Determine marker color based on
