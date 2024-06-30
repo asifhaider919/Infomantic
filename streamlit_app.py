@@ -114,6 +114,9 @@ if uploaded_file is not None:
                 # Add vertical line to the plot
                 fig.add_vline(x=filtered_df.iloc[vertical_line_position]['DateTime'], line_width=2, line_dash="dash", line_color="red")
 
+                # Modify metric name appearance
+                fig.update_traces(name=f"<b><font color='darkblue'>{col}</font></b>")
+
                 # Alternate placing charts in col1 and col2
                 if i % 2 == 1:
                     col1.plotly_chart(fig)
