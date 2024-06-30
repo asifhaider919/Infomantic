@@ -70,6 +70,15 @@ if uploaded_file is not None:
             selected_metrics = st.sidebar.multiselect("Select Metrics", filtered_metrics, default=filtered_metrics)
 
         if len(selected_metrics) > 0:
+            # Slider for vertical line position
+            vertical_line_position = st.sidebar.slider(
+                "Vertical Line Position",
+                min_value=0,
+                max_value=len(df) - 1,
+                value=len(df) // 2,
+                format="%d"
+            )
+
             # Create two columns for displaying charts side by side
             col1, col2 = st.columns(2)
 
@@ -101,6 +110,9 @@ if uploaded_file is not None:
                     xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                     yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 )
+
+                # Add vertical line to the plot
+                fig.add_vline(x=filtered_df.iloc[vertical_line_position]['DateTime'], line_width=2, line_dash="dash", line_color="red")
 
                 # Alternate placing charts in col1 and col2
                 if i % 2 == 1:
