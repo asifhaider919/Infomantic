@@ -71,7 +71,7 @@ if uploaded_file is not None:
                 margin=dict(l=0, r=40, t=0, b=0),  # Set margin to 40px on the right
                 paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
                 plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
-                legend=dict(orientation='h', yanchor='bottom', y=1.1, xanchor='left', x=0.5),  # Legend at the top
+                legend=dict(orientation='h', yanchor='bottom', y=0.01, xanchor='left', x=0.5),  # Legend at the bottom
                 xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
             )
