@@ -28,11 +28,11 @@ if uploaded_file is not None:
 
         # Iterate through each item and create a plot
         for item in items:
-            st.header(f'Item: {item}')
+            st.header(f'{item}')  # Display only the item name without "Item: "
             item_data = df[df['items'] == item]
             
             # Create an interactive plot using Plotly
-            fig = px.line(item_data, x='DateTime', y=item_data.columns[2:], title=f'Item: {item}')
+            fig = px.line(item_data, x='DateTime', y=item_data.columns[2:], title=f'{item}')
             fig.update_layout(
                 xaxis_title='',
                 yaxis_title='',
