@@ -63,8 +63,10 @@ if uploaded_file is not None:
 
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                        f"<b>Longitude:</b> {row['Lon']}<br>"
+                                    	f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
+                                    	f"<b>Longitude:</b> {row['Lon']}<br>"
+                                    	f"<b>Latitude:</b> {row['Lat']}<br>"
+                                    	f"<b>Issue:</b> {row['Issue']}<br>"
 
                         folium.CircleMarker(
                             location=[row['Lat'], row['Lon']],
@@ -72,7 +74,7 @@ if uploaded_file is not None:
                             color=color,
                             fill=True,
                             fill_color=color,
-                            fill_opacity=0.9,
+                            fill_opacity=0.7,
                             popup=folium.Popup(popup_message, max_width=400)
                         ).add_to(m)
                     
@@ -86,8 +88,10 @@ if uploaded_file is not None:
 
                     # Create a popup message with site information
                     popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                    f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
                                     f"<b>Longitude:</b> {row['Lon']}<br>"
+                                    f"<b>Latitude:</b> {row['Lat']}<br>"
+                                    f"<b>Issue:</b> {row['Issue']}<br>"
 
                     folium.CircleMarker(
                         location=[row['Lat'], row['Lon']],
@@ -95,7 +99,7 @@ if uploaded_file is not None:
                         color=color,
                         fill=True,
                         fill_color=color,
-                        fill_opacity=0.9,
+                        fill_opacity=0.7,
                         popup=folium.Popup(popup_message, max_width=400)
                     ).add_to(m)
 
