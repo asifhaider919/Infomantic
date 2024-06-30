@@ -40,6 +40,11 @@ if uploaded_file is not None:
             max_value=datetime.date(date_range[1]),
             value=(datetime.date(date_range[0]), datetime.date(date_range[1]))
         )
+
+        # Convert start_date and end_date to datetime64[ns]
+        start_date = pd.to_datetime(start_date)
+        end_date = pd.to_datetime(end_date)
+
     else:
         st.sidebar.warning("No DateTime column found in the uploaded file.")
 
