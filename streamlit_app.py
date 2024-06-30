@@ -23,7 +23,7 @@ if uploaded_file is not None:
     with open(f"Input_Data.{uploaded_file.name.split('.')[-1]}", "wb") as f:
         f.write(uploaded_file.getbuffer())
     
-   # st.sidebar.success(f"File saved as Input_Data.{uploaded_file.name.split('.')[-1]}")
+    # st.sidebar.success(f"File saved as Input_Data.{uploaded_file.name.split('.')[-1]}")
     
     try:
         # Read the uploaded file into a pandas DataFrame
@@ -42,7 +42,7 @@ if uploaded_file is not None:
             # Extend colors list to accommodate up to 10 categories
             colors = ['green', 'blue', 'red', 'purple', 'orange', 'black', 'magenta', 'yellow', 'lime', 'teal']
 
-	    # Assign light green to a specific category
+            # Assign light green to a specific category
             # Example: Assign 'lightgreen' to the category 'OK'
             colors[categories.index('OK')] = 'green'
 		
@@ -117,7 +117,7 @@ if uploaded_file is not None:
                 color = colors[idx % len(colors)]  # Get color for category
                 # Use HTML and CSS to create colored checkboxes
                 st.sidebar.markdown(f'<span style="color: {color}; font-size: 1.5em">&#9632;</span> {category}', unsafe_allow_html=True)
-						
+				
             # Add developer information at the bottom of the map
             footer_text = '<div style="position: fixed; bottom: 50px; width: 100%; text-align: center; font-size: 12px; color: black;">Developer: Asif Haider</div>'
             footer = folium.Html(footer_text, script=True)
