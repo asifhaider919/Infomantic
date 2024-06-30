@@ -37,8 +37,7 @@ if uploaded_file is not None:
             "Select Date Range",
             min_value=date_range[0],
             max_value=date_range[1],
-            value=(date_range[0], date_range[1]),
-            format="MM/DD/YYYY"
+            value=(date_range[0], date_range[1])
         )
     else:
         st.sidebar.warning("No DateTime column found in the uploaded file.")
