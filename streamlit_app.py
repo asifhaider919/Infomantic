@@ -33,7 +33,7 @@ if uploaded_file is not None:
             search_site_name = st.sidebar.text_input("Enter Site Name")
             
             # Create initial map centered around the mean location of all data
-            m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=4)
+            m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=6)
 
             # Display markers for filtered data or all data if not filtered
             if search_site_name:
