@@ -6,6 +6,15 @@ from streamlit_folium import folium_static
 # Set page configuration
 st.set_page_config(layout="wide")
 
+# Logo image URL (replace with your actual logo URL)
+logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Kj80VCFDZV3eFqa8ppMxXlhxvjkr6XQ85A&s"
+
+# Display the logo at the top of the sidebar
+st.sidebar.image(logo_url, width=200)
+
+# Title of the app
+# st.title("Site and Transaction Map")
+
 # Hide default file uploader text
 hide_file_upload_style = """
     <style>
@@ -67,4 +76,87 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
 
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                        f"<b>
+                                        f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
+                                        f"<b>Longitude:</b> {row['Lon']}<br>" \
+                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                        f"<b>Issue:</b> {row['Issue']}<br>"
+
+                        folium.CircleMarker(
+                            location=[row['Lat'], row['Lon']],
+                            radius=radius,
+                            color=color,
+                            fill=True,
+                            fill_color=color,
+                            fill_opacity=0.7,
+                            popup=folium.Popup(popup_message, max_width=400)
+                        ).add_to(combined_map)
+                    
+                    # Fit the map to the bounds
+                    combined_map.fit_bounds(bounds)
+            else:
+                for idx, row in site_data.iterrows():
+                    # Determine marker color based on 'Issue' category
+                    category = row['Issue']
+                    color = colors[site_categories.index(category) % len(colors)] if category in site_categories else 'blue'
+
+                    # Create a popup message with site information
+                    popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                    f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
+                                    f"<b>Longitude:</b> {row['Lon']}<br>" \
+                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                    f"<b>Issue:</b> {row['Issue']}<br>"
+
+                    folium.CircleMarker(
+                        location=[row['Lat'], row['Lon']],
+                        radius=6,
+                        color=color,
+                        fill=True,
+                        fill_color=color,
+                        fill_opacity=0.7,
+                        popup=folium.Popup(popup_message, max_width=400)
+                    ).add_to(combined_map)
+
+            # Display the legend for site data in the sidebar with colored checkboxes
+            st.sidebar.subheader("Site Map Legend")
+            for idx, category in enumerate(site_categories):
+                color = colors[idx % len(colors)]  # Get color for category
+                # Use HTML and CSS to create colored checkboxes
+                st.sidebar.markdown(f'<span style="color: {color}; font-size: 1.5em">&#9632;</span> {category}', unsafe_allow_html=True)
+                
+            # Read the uploaded TXN file into a pandas DataFrame
+            if uploaded_file_txn.name.endswith('.xls') or uploaded_file_txn.name.endswith('.xlsx'):
+                txn_data = pd.read_excel(uploaded_file_txn)
+            else:
+                txn_data = pd.read_csv(uploaded_file_txn)
+            
+            # Check for required columns for TXN data
+            required_columns_txn = ['Site_A', 'Site_B', 'Lat_A', 'Lon_A', 'Lat_B', 'Lon_B']
+            if all(col in txn_data.columns for col in required_columns_txn):
+                # Convert relevant columns to numeric (in case they are not already numeric)
+                numeric_columns_txn = ['Lat_A', 'Lon_A', 'Lat_B', 'Lon_B']
+                txn_data[numeric_columns_txn] = txn_data[numeric_columns_txn].apply(pd.to_numeric, errors='coerce')
+                
+                # Iterate through rows to draw lines for TXN data
+                for index, row in txn_data.iterrows():
+                    # Skip rows with missing or NaN values in coordinates
+                    if pd.isnull(row[['Lat_A', 'Lon_A', 'Lat_B', 'Lon_B']]).any():
+                        st.sidebar.warning(f"Skipping TXN row {index+1}: Missing coordinates")
+                        continue
+                    
+                    # Add a line from Lat_A/Lon_A to Lat_B/Lon_B
+                    folium.PolyLine(
+                        locations=[(row['Lat_A'], row['Lon_A']), (row['Lat_B'], row['Lon_B'])],
+                        color='#0000FF',  # Change color here
+                        weight=1  # Change line weight here
+                    ).add_to(combined_map)
+                
+
+                # Display the combined map in the Streamlit app
+                # st.subheader("Combined Site and Transaction Map")
+                folium_static(combined_map, width=1200, height=700)
+                
+            else:
+                st.sidebar.warning(f"Required columns {required_columns_txn} not found in the TXN file.")
+    
+    except Exception as e:
+        st.sidebar.error(f"An error occurred while processing the file: {e}")
