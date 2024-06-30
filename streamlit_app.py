@@ -7,41 +7,18 @@ from streamlit_folium import folium_static
 st.set_page_config(layout="wide")
 
 # Logo image URL (replace with your actual logo URL)
-#logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Kj80VCFDZV3eFqa8ppMxXlhxvjkr6XQ85A&s"
+logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Kj80VCFDZV3eFqa8ppMxXlhxvjkr6XQ85A&s"
 
 # Display the logo at the top of the sidebar
-#st.sidebar.image(logo_url, width=200)
+st.sidebar.image(logo_url, width=200)
 
 # Title of the app
 # st.title("Site and Transaction Map")
+														   
 
-# Hide default file uploader text
-hide_file_upload_style = """
-    <style>
-    .css-1t1j96h, .css-1d391kg {
-        visibility: hidden;
-    }
-    .css-1t1j96h::before, .css-1d391kg::before {
-        content: 'Upload Site Info file';
-        visibility: visible;
-        display: block;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: black;
-    }
-    .css-1t1j96h[data-baseweb="file-uploader"] > div:first-child > div:first-child::before, 
-    .css-1d391kg[data-baseweb="file-uploader"] > div:first-child > div:first-child::before {
-        content: 'Upload TXN Info file';
-    }
-    </style>
-"""
-st.markdown(hide_file_upload_style, unsafe_allow_html=True)
-
-# Custom file uploader labels
-uploaded_file_site = st.sidebar.file_uploader("", type=["xlsx"], label_visibility="collapsed", help="Upload Site Info file")
-uploaded_file_txn = st.sidebar.file_uploader("", type=["xlsx"], label_visibility="collapsed", help="Upload TXN Info file")
+# Sidebar for file upload
+uploaded_file_site = st.sidebar.file_uploader("Upload Site Info file", type=["xlsx"])
+uploaded_file_txn = st.sidebar.file_uploader("Upload TXN Info file", type=["xlsx"])
 
 if uploaded_file_site is not None and uploaded_file_txn is not None:
     try:
@@ -57,14 +34,14 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
         else:
             # Define categories for the legend based on 'Issue' column
             site_categories = site_data['Issue'].unique().tolist()
-                                                                                                               
+																											   
             # Extend colors list to accommodate up to 10 categories
             colors = ['green', 'blue', 'red', 'purple', 'orange', 'black', 'magenta', 'yellow', 'lime', 'teal']
 
             # Assign light green to a specific category
             # Example: Assign 'lightgreen' to the category 'OK'
             colors[site_categories.index('OK')] = 'green'
-        
+		
             # Sidebar filter by Site Name
             search_site_name = st.sidebar.text_input("Enter Site Name")
 
@@ -90,10 +67,10 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
 
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                        f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
-                                        f"<b>Longitude:</b> {row['Lon']}<br>" \
-                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                        f"<b>Issue:</b> {row['Issue']}<br>"
+                                    	f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
+                                    	f"<b>Longitude:</b> {row['Lon']}<br>" \
+                                    	f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                    	f"<b>Issue:</b> {row['Issue']}<br>"
 
                         folium.CircleMarker(
                             location=[row['Lat'], row['Lon']],
@@ -136,7 +113,7 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
                 color = colors[idx % len(colors)]  # Get color for category
                 # Use HTML and CSS to create colored checkboxes
                 st.sidebar.markdown(f'<span style="color: {color}; font-size: 1.5em">&#9632;</span> {category}', unsafe_allow_html=True)
-                
+				
             # Read the uploaded TXN file into a pandas DataFrame
             if uploaded_file_txn.name.endswith('.xls') or uploaded_file_txn.name.endswith('.xlsx'):
                 txn_data = pd.read_excel(uploaded_file_txn)
