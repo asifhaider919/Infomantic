@@ -6,10 +6,8 @@ from streamlit_folium import folium_static
 # Set page configuration
 st.set_page_config(layout="wide")
 
-# Title of the app
 # Title of the app with reduced size
 st.markdown("<h2 style='text-align: left;'>Map Display</h2>", unsafe_allow_html=True)
-
 
 # Sidebar for file upload
 st.sidebar.header("File Upload")
@@ -55,33 +53,21 @@ if uploaded_file is not None:
                             color = 'red'
                         else:
                             color = 'blue'
-																	  
-														
-																							
 
-               
-											
-																  
-									   
-										  
-																			
-					 
-																		 
-				
-                # Create a popup message with site information
-                popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                f"<b>Longitude:</b> {row['Lon']}<br>"
+                        # Create a popup message with site information
+                        popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                        f"<b>Longitude:</b> {row['Lon']}<br>"
 
-                folium.CircleMarker(
-                    location=[row['Lat'], row['Lon']],
-                    radius=6,
-                    color=color,
-                    fill=True,
-                    fill_color=color,
-                    fill_opacity=0.4,
-                    popup=folium.Popup(popup_message, max_width=400)
-                ).add_to(m)
+                        folium.CircleMarker(
+                            location=[row['Lat'], row['Lon']],
+                            radius=6,
+                            color=color,
+                            fill=True,
+                            fill_color=color,
+                            fill_opacity=0.4,
+                            popup=folium.Popup(popup_message, max_width=400)
+                        ).add_to(m)
                     
                     # Fit the map to the bounds
                     m.fit_bounds(bounds)
