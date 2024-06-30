@@ -32,28 +32,15 @@ if uploaded_file is not None:
             search_site_name = st.sidebar.text_input("Enter Site Name")
             
             # Create initial map centered around the mean location of all data
-            m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=7)  # Zoom start set to 7
+            m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=7)
 
             # Display markers for filtered data or all data if not filtered
             if search_site_name:
                 filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
                 if not filtered_data.empty:
-                    # Calculate bounds to zoom to 10km around the first filtered site
-                    first_site = filtered_data.iloc[0]
-                    bounds = [(first_site['Lat'] - 0.05, first_site['Lon'] - 0.05), 
-                              (first_site['Lat'] + 0.05, first_site['Lon'] + 0.05)]
-                    
                     for idx, row in data.iterrows():
-                        # Determine marker icon
-                        if row['Site'] in filtered_data['Site'].values:
-                            # Use a custom hexagon icon for filtered sites
-                            icon = folium.CustomIcon(icon_image='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/images/marker-icon.png',
-                                                     icon_size=(30, 42),  # Adjust size as needed
-                                                     icon_anchor=(15, 42),  # Position icon
-                                                     popup_anchor=(0, -42))  # Adjust popup position
-                        else:
-                            # Default symbol for other sites
-                            icon = folium.Icon(color='blue', icon='cloud')
+                        # Determine marker icon with asterisk shape
+                        icon = folium.Icon(color='red', icon='glyphicon glyphicon-asterisk')
 
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
@@ -67,7 +54,7 @@ if uploaded_file is not None:
                         ).add_to(m)
                     
                     # Fit the map to the bounds
-                    m.fit_bounds(bounds)
+                    m.fit_bounds(m.get_bounds())
             else:
                 for idx, row in data.iterrows():
                     # Create a popup message with site information
@@ -78,7 +65,7 @@ if uploaded_file is not None:
                     folium.Marker(
                         location=[row['Lat'], row['Lon']],
                         popup=folium.Popup(popup_message, max_width=400),
-                        icon=folium.Icon(color='blue', icon='cloud')
+                        icon=folium.Icon(color='blue', icon='glyphicon glyphicon-asterisk')
                     ).add_to(m)
 
             # Display the map in the Streamlit app
