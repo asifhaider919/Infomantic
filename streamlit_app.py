@@ -36,7 +36,7 @@ if uploaded_file is not None:
                 width=chart_width,
                 height=chart_height,
                 margin=dict(l=40, r=40, t=40, b=40),  # Adjust margin to add padding
-                paper_bgcolor='lightgray',  # Make background transparent
+                paper_bgcolor='rgb(240, 240, 240)', # Make background transparent
                 plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
                 legend=dict(orientation='h', yanchor='top', y=1.1, xanchor='left', x=0.5),  # Legend position
                 xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
