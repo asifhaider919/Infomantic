@@ -39,9 +39,9 @@ if uploaded_file is not None:
     if date_range:
         start_date, end_date = st.sidebar.slider(
             "Select Date Range",
-            min_value=pd.Timestamp(df['DateTime'].min()),
-            max_value=pd.Timestamp(df['DateTime'].max()),
-            value=(pd.Timestamp(df['DateTime'].min()), pd.Timestamp(df['DateTime'].max())),
+            min_value=df['DateTime'].min(),
+            max_value=df['DateTime'].max(),
+            value=(df['DateTime'].min(), df['DateTime'].max()),
             format="YYYY-MM-DD HH:mm:ss"
         )
 
@@ -52,9 +52,9 @@ if uploaded_file is not None:
         # Slider for vertical line position
         vertical_line_position = st.sidebar.slider(
             "Vertical Line Position",
-            min_value=pd.Timestamp(df['DateTime'].min()),
-            max_value=pd.Timestamp(df['DateTime'].max()),
-            value=pd.Timestamp(df['DateTime'].min()),  # Default to minimum date initially
+            min_value=df['DateTime'].min(),
+            max_value=df['DateTime'].max(),
+            value=df['DateTime'].min(),  # Default to minimum date initially
             format="YYYY-MM-DD HH:mm:ss"
         )
 
