@@ -6,10 +6,8 @@ from streamlit_folium import folium_static
 # Set page configuration
 st.set_page_config(layout="wide")
 
-# Title of the app
 # Title of the app with reduced size
-st.markdown("<h2 style='text-align: left;'>Map Display</h2>", unsafe_allow_html=True)
-
+st.markdown("<h2 style='text-align: center;'>Upload File to Plot Sites on Map</h2>", unsafe_allow_html=True)
 
 # Sidebar for file upload
 st.sidebar.header("File Upload")
@@ -30,68 +28,52 @@ if uploaded_file is not None:
             data = pd.read_csv(uploaded_file)
         
         # Ensure the required columns are present
-        if 'Lat' not in data.columns or 'Lon' not in data.columns or 'Site' not in data.columns:
-            st.sidebar.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
+        if 'Lat' not in data.columns or 'Lon' not in data.columns or 'Site' not in data.columns or 'Issue' not in data.columns:
+            st.sidebar.error("The uploaded file must contain 'Site', 'Lat', 'Lon', and 'Issue' columns.")
         else:
             # Sidebar filter by Site Name
             st.sidebar.subheader("Filter by Site Name")
             search_site_name = st.sidebar.text_input("Enter Site Name")
+
+            # Sidebar for issue category selection
+            st.sidebar.subheader("Filter by Issue Category")
+            issue_categories = data['Issue'].unique()
+            selected_issues = st.sidebar.multiselect("Select Issue Categories", issue_categories, default=issue_categories)
             
             # Create initial map centered around the mean location of all data
             m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=7)
-
-            # Display markers for filtered data or all data if not filtered
+            
+            # Filter data based on the selected issues
+            filtered_data = data[data['Issue'].isin(selected_issues)]
+            
+            # Further filter data based on site name if provided
             if search_site_name:
-                filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
-                if not filtered_data.empty:
-                    # Calculate bounds to zoom to 10km around the first filtered site
-                    first_site = filtered_data.iloc[0]
-                    bounds = [(first_site['Lat'] - 0.05, first_site['Lon'] - 0.05), 
-                              (first_site['Lat'] + 0.05, first_site['Lon'] + 0.05)]
-                    
-                    for idx, row in data.iterrows():
-                        # Determine marker color
-                        if row['Site'] in filtered_data['Site'].values:
-                            color = 'red'
-                        else:
-                            color = 'blue'
+                filtered_data = filtered_data[filtered_data['Site'].str.contains(search_site_name, case=False)]
+            
+            # Define a color map for issues
+            color_map = {issue: folium.Icon(color='blue', icon='circle') for issue in issue_categories}
+            for idx, issue in enumerate(issue_categories):
+                color = f"#{idx:02x}{idx:02x}{idx:02x}"  # Generate a unique color for each issue
+                color_map[issue] = folium.Icon(color=color, icon='circle')
+            
+            for idx, row in filtered_data.iterrows():
+                # Determine marker color based on issue category
+                icon = color_map.get(row['Issue'], folium.Icon(color='gray', icon='circle'))
+                
+                # Create a popup message with site information
+                popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                f"<b>Longitude:</b> {row['Lon']}<br>" \
+                                f"<b>Issue:</b> {row['Issue']}<br>"
 
-                        # Create a popup message with site information
-                        popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                        f"<b>Longitude:</b> {row['Lon']}<br>"
-
-                        folium.CircleMarker(
-                            location=[row['Lat'], row['Lon']],
-                            radius=6,
-                            color=color,
-                            fill=True,
-                            fill_color=color,
-                            fill_opacity=0.4,
-                            popup=folium.Popup(popup_message, max_width=400)
-                        ).add_to(m)
-                    
-                    # Fit the map to the bounds
-                    m.fit_bounds(bounds)
-            else:
-                for idx, row in data.iterrows():
-                    # Create a popup message with site information
-                    popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                    f"<b>Longitude:</b> {row['Lon']}<br>"
-
-                    folium.CircleMarker(
-                        location=[row['Lat'], row['Lon']],
-                        radius=6,
-                        color='blue',
-                        fill=True,
-                        fill_color='blue',
-                        fill_opacity=0.4,
-                        popup=folium.Popup(popup_message, max_width=400)
-                    ).add_to(m)
-
+                folium.Marker(
+                    location=[row['Lat'], row['Lon']],
+                    popup=folium.Popup(popup_message, max_width=400),
+                    icon=icon
+                ).add_to(m)
+            
             # Display the map in the Streamlit app
-            folium_static(m, width=1200, height=700)
+            folium_static(m, width=900, height=700)
 
     except Exception as e:
         st.sidebar.error(f"An error occurred while processing the file: {e}")
