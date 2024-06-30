@@ -58,7 +58,7 @@ if uploaded_file is not None:
 
                         folium.CircleMarker(
                             location=[row['Lat'], row['Lon']],
-                            radius=12,
+                            radius=6,
                             color=color,
                             fill=True,
                             fill_color=color,
