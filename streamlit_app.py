@@ -13,7 +13,7 @@ logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Kj80VCFDZV3e
 st.sidebar.image(logo_url, width=200)
 
 # Title of the app with reduced size
-st.markdown("<h2 style='text-align: left;'>Network Capacity Limitation / Frame Loss</h2>", unsafe_allow_html=True)
+# st.markdown("<h2 style='text-align: left;'>Network Capacity Limitation / Frame Loss</h2>", unsafe_allow_html=True)
 
 # Sidebar for file upload
 uploaded_file = st.sidebar.file_uploader("Choose a xls/xslx file", type=["csv", "xls", "xlsx"])
