@@ -49,26 +49,59 @@ if uploaded_file is not None:
             # Create initial map centered around the mean location of all data
             m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=7)
 
-            for idx, row in data.iterrows():
-                # Determine marker color based on issue category
-                color = color_map.get(row['Issue'], 'blue')
-                
-                # Create a popup message with site information
-                popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
-                                f"<b>Latitude:</b> {row['Lat']}<br>" \
-                                f"<b>Longitude:</b> {row['Lon']}<br>" \
-                                f"<b>Issue:</b> {row['Issue']}<br>"
+            if search_site_name:
+                filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
+                if not filtered_data.empty:
+                    # Calculate bounds to zoom to all filtered sites
+                    bounds = []
+                    for _, row in filtered_data.iterrows():
+                        bounds.append([row['Lat'], row['Lon']])
 
-                folium.CircleMarker(
-                    location=[row['Lat'], row['Lon']],
-                    radius=6,
-                    color=color,
-                    fill=True,
-                    fill_color=color,
-                    fill_opacity=0.4,
-                    popup=folium.Popup(popup_message, max_width=400)
-                ).add_to(m)
-            
+                    # Create a popup message with site information
+                    for idx, row in filtered_data.iterrows():
+                        # Determine marker color based on issue category
+                        color = color_map.get(row['Issue'], 'blue')
+                        
+                        # Create a popup message with site information
+                        popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                        f"<b>Longitude:</b> {row['Lon']}<br>" \
+                                        f"<b>Issue:</b> {row['Issue']}<br>"
+
+                        folium.CircleMarker(
+                            location=[row['Lat'], row['Lon']],
+                            radius=6,
+                            color=color,
+                            fill=True,
+                            fill_color=color,
+                            fill_opacity=0.4,
+                            popup=folium.Popup(popup_message, max_width=400)
+                        ).add_to(m)
+
+                    # Fit the map to the bounds of filtered sites
+                    m.fit_bounds(bounds)
+
+            else:
+                for idx, row in data.iterrows():
+                    # Determine marker color based on issue category
+                    color = color_map.get(row['Issue'], 'blue')
+
+                    # Create a popup message with site information
+                    popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                    f"<b>Longitude:</b> {row['Lon']}<br>" \
+                                    f"<b>Issue:</b> {row['Issue']}<br>"
+
+                    folium.CircleMarker(
+                        location=[row['Lat'], row['Lon']],
+                        radius=6,
+                        color=color,
+                        fill=True,
+                        fill_color=color,
+                        fill_opacity=0.4,
+                        popup=folium.Popup(popup_message, max_width=400)
+                    ).add_to(m)
+
             # Display the map in the Streamlit app
             folium_static(m, width=900, height=700)
 
