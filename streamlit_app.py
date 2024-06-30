@@ -118,18 +118,11 @@ if uploaded_file is not None:
                 # Use HTML and CSS to create colored checkboxes
                 st.sidebar.markdown(f'<span style="color: {color}; font-size: 1.5em">&#9632;</span> {category}', unsafe_allow_html=True)
 				
-            # Add developer information at the bottom of the map
-            footer_text = '<div style="position: absolute; bottom: 50px; width: 100%; text-align: center; font-size: 14px; color: black;">Developer: Asif Haider</div>'
-            footer = folium.Html(footer_text, script=True)
-            footer_popup = folium.Popup(footer, parse_html=True)
-            folium.Marker(
-                location=[data['Lat'].mean(), data['Lon'].mean()],
-                icon=folium.Icon(color='white', icon='info-sign'),
-                popup=footer_popup
-            ).add_to(m)
-
             # Display the map in the Streamlit app
             folium_static(m, width=1200, height=700)
+            
+            # Display developer information below the map
+            st.markdown("<div style='text-align: center; font-size: 14px; color: black;'>Developer: Asif Haider</div>", unsafe_allow_html=True)
 
     except Exception as e:
         st.sidebar.error(f"An error occurred while processing the file: {e}")
