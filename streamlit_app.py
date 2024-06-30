@@ -28,7 +28,7 @@ if uploaded_file is not None:
 
         # Iterate through each item and create a plot
         for item in items:
-            st.header(f'{item}')  # Display only the item name without "Item: "
+           
             item_data = df[df['items'] == item]
             
             # Create an interactive plot using Plotly
