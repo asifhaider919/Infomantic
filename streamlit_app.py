@@ -36,9 +36,10 @@ if uploaded_file is not None:
     if date_range:
         start_date, end_date = st.sidebar.slider(
             "Select Date Range",
-            min_value=datetime.date(date_range[0]),
-            max_value=datetime.date(date_range[1]),
-            value=(datetime.date(date_range[0]), datetime.date(date_range[1]))
+            min_value=df['DateTime'].min(),
+            max_value=df['DateTime'].max(),
+            value=(df['DateTime'].min(), df['DateTime'].max()),
+            format="MM/DD/YYYY"
         )
 
         # Convert start_date and end_date to datetime64[ns]
