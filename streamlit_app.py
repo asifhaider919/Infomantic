@@ -55,20 +55,26 @@ if uploaded_file is not None:
         all_metrics_option = "All Metrics"
         available_metrics = df.columns[2:].tolist()
 
-        # Search box for filtering metrics by typing
-        filter_text = st.sidebar.text_input("Filter Metrics", "")
+        # Checkbox to display all metrics
+        display_all_metrics = st.sidebar.checkbox("Display All Metrics")
 
-        # Filter metrics for autocomplete suggestions
-        filtered_metrics = [metric for metric in available_metrics if fnmatch.fnmatch(metric.lower(), f'*{filter_text.lower()}*')]
-
-        # Show autocomplete suggestions in a selectbox
-        selected_metric = st.sidebar.selectbox("Select Metric", [""] + filtered_metrics)
-
-        # Handle selection of metrics
-        if selected_metric:
-            selected_metrics = [selected_metric]
+        if display_all_metrics:
+            selected_metrics = available_metrics
         else:
-            selected_metrics = available_metrics  # Display all metrics
+            # Search box for filtering metrics by typing
+            filter_text = st.sidebar.text_input("Filter Metrics", "")
+
+            # Filter metrics for autocomplete suggestions
+            filtered_metrics = [metric for metric in available_metrics if fnmatch.fnmatch(metric.lower(), f'*{filter_text.lower()}*')]
+
+            # Show autocomplete suggestions in a selectbox
+            selected_metric = st.sidebar.selectbox("Select Metric", [""] + filtered_metrics)
+
+            # Handle selection of metrics
+            if selected_metric:
+                selected_metrics = [selected_metric]
+            else:
+                selected_metrics = []  # No metric selected
 
         if len(selected_metrics) > 0:
             # Create two columns for displaying charts side by side
