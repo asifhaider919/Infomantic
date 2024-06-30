@@ -97,4 +97,3 @@ if uploaded_file is not None:
 
     else:
         st.warning("No metrics found in the uploaded file.")
-
