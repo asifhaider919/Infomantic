@@ -6,10 +6,8 @@ from streamlit_folium import folium_static
 # Set page configuration
 st.set_page_config(layout="wide")
 
-	  
 # Title of the app with reduced size
 st.markdown("<h2 style='text-align: left;'>Map Display</h2>", unsafe_allow_html=True)
-
 
 # Sidebar for file upload
 st.sidebar.header("File Upload")
@@ -35,7 +33,7 @@ if uploaded_file is not None:
         else:
             # Define categories for the legend based on 'Issue' column
             categories = data['Issue'].unique().tolist()
-            colors = ['blue', 'red', 'green', 'orange', 'purple', 'black']  # Adjust colors as needed
+            colors = ['blue', 'red', 'green', 'orange', 'purple']  # Adjust colors as needed
 
             # Sidebar filter by Site Name
             st.sidebar.subheader("Filter by Site Name")
