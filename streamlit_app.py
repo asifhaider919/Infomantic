@@ -35,7 +35,7 @@ if uploaded_file is not None:
         # Iterate through each metric column (starting from the 3rd column)
         for i, col in enumerate(df.columns[2:], start=1):
             # Create an interactive plot using Plotly for each metric
-            fig = px.line(df, x='DateTime', y=col, color='items')
+            fig = px.line(df, x='DateTime', y=col, color='items', labels={'items': col})  # Use column name as legend
             fig.update_layout(
                 xaxis_title='',
                 yaxis_title='',
