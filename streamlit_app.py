@@ -6,11 +6,16 @@ from streamlit_folium import folium_static
 # Set page configuration
 st.set_page_config(layout="wide")
 
+# Logo image URL (replace with your actual logo URL)
+logo_url = "https://www.nokia.com/sites/default/files/styles/scale_720_not_convert_webp/public/2023-02/nokia-refreshed-logo-2_1.png"
+
+# Display the logo at the top of the sidebar
+st.sidebar.image(logo_url, width=200)
+
 # Title of the app with reduced size
 st.markdown("<h2 style='text-align: left;'>Network Capacity Limitation / Frame Loss</h2>", unsafe_allow_html=True)
 
 # Sidebar for file upload
-# st.sidebar.header("File Upload")
 uploaded_file = st.sidebar.file_uploader("Choose a xls/xslx file", type=["csv", "xls", "xlsx"])
 
 if uploaded_file is not None:
@@ -38,7 +43,6 @@ if uploaded_file is not None:
             colors = ['green', 'orange', 'red', 'blue', 'purple', 'black', 'magenta', 'yellow', 'lime', 'teal']
             
             # Sidebar filter by Site Name
-            #st.sidebar.subheader("Filter by Site Name")
             search_site_name = st.sidebar.text_input("Enter Site Name")
             
             # Create initial map centered around the mean location of all data
