@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from datetime import datetime
 
 # Set wide layout
 st.set_page_config(layout="wide")
@@ -35,9 +36,9 @@ if uploaded_file is not None:
     if date_range:
         start_date, end_date = st.sidebar.slider(
             "Select Date Range",
-            min_value=date_range[0],
-            max_value=date_range[1],
-            value=(date_range[0], date_range[1])
+            min_value=datetime.date(date_range[0]),
+            max_value=datetime.date(date_range[1]),
+            value=(datetime.date(date_range[0]), datetime.date(date_range[1]))
         )
     else:
         st.sidebar.warning("No DateTime column found in the uploaded file.")
