@@ -7,11 +7,11 @@ from streamlit_folium import folium_static
 st.set_page_config(layout="wide")
 
 # Title of the app with reduced size
-st.markdown("<h2 style='text-align: left;'>Map Display</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: left;'>Network Capacity / Frame Loss</h2>", unsafe_allow_html=True)
 
 # Sidebar for file upload
 st.sidebar.header("File Upload")
-uploaded_file = st.sidebar.file_uploader("Choose a CSV file", type=["csv", "xls", "xlsx"])
+uploaded_file = st.sidebar.file_uploader("Choose a xls/xslx file", type=["csv", "xls", "xlsx"])
 
 if uploaded_file is not None:
     # Save the uploaded file
