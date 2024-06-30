@@ -36,9 +36,9 @@ if uploaded_file is not None:
     if date_range:
         start_date, end_date = st.sidebar.slider(
             "Select Date Range",
-            min_value=df['DateTime'].min(),
-            max_value=df['DateTime'].max(),
-            value=(df['DateTime'].min(), df['DateTime'].max()),
+            min_value=pd.Timestamp(df['DateTime'].min()),
+            max_value=pd.Timestamp(df['DateTime'].max()),
+            value=(pd.Timestamp(df['DateTime'].min()), pd.Timestamp(df['DateTime'].max())),
             format="MM/DD/YYYY"
         )
 
