@@ -101,12 +101,9 @@ if uploaded_file is not None:
             st.sidebar.subheader("Legend")
             for idx, category in enumerate(categories):
                 color = colors[idx % len(colors)]  # Get color for category
-                checkbox = st.sidebar.checkbox(category, value=True, key=f"checkbox_{idx}", 
-                                               help=f"Show {category}", 
-                                               on_change=None,
-                                               args=None,
-                                               kwargs=None)
-                checkbox.subheader(f'## legend{category}')
+                # Use HTML and CSS to create colored checkboxes
+                st.sidebar.markdown(f'<span style="color: {color}; font-size: 1.5em">&#9632;</span> {category}', unsafe_allow_html=True)
+				
             # Display the map in the Streamlit app
             folium_static(m, width=1200, height=700)
 
