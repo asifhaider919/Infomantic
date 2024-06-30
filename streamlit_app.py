@@ -55,7 +55,7 @@ if uploaded_file is not None:
 
                     for item in selected_items:
                         # Filter data based on selected metric and item
-                        filtered_data = df[(df['items'] == item)]
+                        filtered_data = df[df['items'] == item]
 
                         # Find the last available hour for the selected metric and item
                         last_hour_data = filtered_data[filtered_data[metric].notnull()].tail(1)
@@ -67,25 +67,4 @@ if uploaded_file is not None:
                         # Find the corresponding hour from previous days
                         previous_hour_data = filtered_data[filtered_data['DateTime'].apply(lambda x: x.hour) == last_hour_data['DateTime'].iloc[0].hour - 1]
                         if not previous_hour_data.empty:
-                            previous_hour_value = previous_hour_data[metric].iloc[0]
-                        else:
-                            previous_hour_value = None
-
-                        metric_values.extend([last_hour_value, previous_hour_value])
-
-                    table_data[metric] = metric_values
-
-                # Create DataFrame for the table
-                table_df = pd.DataFrame(table_data, index=pd.Index(selected_items, name='Item'))
-
-                # Display the table
-                st.dataframe(table_df)
-
-            else:
-                st.warning("Please select at least one item.")
-        else:
-            st.warning("Please select at least one metric.")
-    else:
-        st.error("'items' column not found in the uploaded file. Please check the column names.")
-else:
-    st.info("Please upload an Excel file.")
+                            previo
