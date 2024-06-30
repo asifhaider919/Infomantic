@@ -12,6 +12,9 @@ uploaded_file = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
 # Default chart height
 default_chart_height = 300
 
+# Default date range based on DataFrame if available
+date_range = None
+
 if uploaded_file is not None:
     # Load the Excel file
     df = pd.read_excel(uploaded_file)
@@ -24,6 +27,22 @@ if uploaded_file is not None:
     chart_width = st.sidebar.slider("Chart Width", min_value=500, max_value=3000, value=800)
     chart_height = st.sidebar.slider("Chart Height", min_value=300, max_value=1000, value=default_chart_height)
 
+    # Determine date range from DataFrame
+    if 'DateTime' in df.columns:
+        date_range = (df['DateTime'].min(), df['DateTime'].max())
+
+    # DateTime slider in the sidebar
+    if date_range:
+        start_date, end_date = st.sidebar.slider(
+            "Select Date Range",
+            min_value=date_range[0],
+            max_value=date_range[1],
+            value=(date_range[0], date_range[1]),
+            format="MM/DD/YYYY"
+        )
+    else:
+        st.sidebar.warning("No DateTime column found in the uploaded file.")
+
     # Ensure the 'items' column exists
     if 'items' in df.columns:
         # Get unique items
@@ -34,8 +53,11 @@ if uploaded_file is not None:
 
         # Iterate through each metric column (starting from the 3rd column)
         for i, col in enumerate(df.columns[2:], start=1):
+            # Filter data based on selected date range
+            filtered_df = df[(df['DateTime'] >= start_date) & (df['DateTime'] <= end_date)]
+
             # Create an interactive plot using Plotly for each metric
-            fig = px.line(df, x='DateTime', y=col, color='items', labels={'items': col})  # Use column name as legend
+            fig = px.line(filtered_df, x='DateTime', y=col, color='items', labels={'items': col})  # Use column name as legend
             fig.update_layout(
                 xaxis_title='',
                 yaxis_title='',
