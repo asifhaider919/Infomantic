@@ -97,7 +97,7 @@ if uploaded_file is not None:
                     yaxis_title='',
                     width=chart_width,
                     height=chart_height,
-                    margin=dict(l=0, r=40, t=0, b=0),  # Set margin to 40px on the right
+                     margin=dict(l=50, r=40, t=0, b=20),  # Adjust margins as needed
                     paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
                     plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
                     legend=dict(
