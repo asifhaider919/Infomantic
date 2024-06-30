@@ -36,8 +36,8 @@ if uploaded_file is not None:
                 width=chart_width,
                 height=chart_height,
                 margin=dict(l=0, r=0, t=0, b=0),  # Adjust margin to add padding
-                paper_bgcolor='rgba(1,0,0,100)',  # Make background transparent
-                plot_bgcolor='rgba(1,0,0,100)',   # Make plot area transparent
+                paper_bgcolor='rgba(1,0,0,10000)',  # Make background transparent
+                plot_bgcolor='rgba(1,0,0,10000)',   # Make plot area transparent
             )
             st.plotly_chart(fig)
     else:
