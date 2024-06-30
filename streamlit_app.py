@@ -144,9 +144,6 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
                 
             else:
                 st.sidebar.warning(f"Required columns {required_columns_txn} not found in the TXN file.")
-        
-        else:
-            st.sidebar.error("The uploaded TXN file must contain 'Site_A', 'Site_B', 'Lat_A', 'Lon_A', 'Lat_B', and 'Lon_B' columns.")
     
     except Exception as e:
         st.sidebar.error(f"An error occurred while processing the file: {e}")
