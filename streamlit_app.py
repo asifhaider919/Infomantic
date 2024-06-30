@@ -105,7 +105,8 @@ if uploaded_file is not None:
                         yanchor='bottom',  # Anchor legend to the bottom of the plot area
                         y=1.02,  # Adjust vertical position
                         xanchor='right',  # Anchor legend to the right of the plot area
-                        x=1  # Adjust horizontal position
+                        x=1,  # Adjust horizontal position
+                        font=dict(color="darkblue")  # Set legend font color to dark blue
                     ),
                     xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                     yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
@@ -113,9 +114,6 @@ if uploaded_file is not None:
 
                 # Add vertical line to the plot
                 fig.add_vline(x=filtered_df.iloc[vertical_line_position]['DateTime'], line_width=2, line_dash="dash", line_color="red")
-
-                # Modify metric name appearance
-                fig.update_traces(name=f"<b><font color='darkblue'>{col}</font></b>")
 
                 # Alternate placing charts in col1 and col2
                 if i % 2 == 1:
