@@ -50,48 +50,51 @@ if uploaded_file is not None:
 
     # Sidebar for filtering metrics
     st.sidebar.header("Filter Metrics")
-    filter_text = st.sidebar.text_input("Search Metrics by Name")
 
     # Get unique metrics
-    all_metrics = df.columns[2:]  # Assuming metrics start from the third column
+    all_metrics = df.columns[2:] if 'DateTime' in df.columns else []  # Assuming metrics start from the third column
 
-    # Multiselect dropdown for selecting metrics
-    selected_metrics = st.sidebar.multiselect(
-        "Select Metrics",
-        all_metrics,
-        default=all_metrics,
-        format_func=lambda x: "All Metrics" if x == all_metrics else x,
-        key="metrics_multiselect"
-    )
+    if len(all_metrics) > 0:
+        # Multiselect dropdown for selecting metrics
+        selected_metrics = st.sidebar.multiselect(
+            "Select Metrics",
+            all_metrics,
+            default=all_metrics,
+            format_func=lambda x: "All Metrics" if x == all_metrics else x,
+            key="metrics_multiselect"
+        )
 
-    # Filtered DataFrame based on selected metrics
-    if selected_metrics:
-        filtered_df = df[['DateTime'] + selected_metrics]  # Ensure DateTime column is always included
+        # Filtered DataFrame based on selected metrics
+        if selected_metrics:
+            filtered_df = df[['DateTime'] + selected_metrics]  # Ensure DateTime column is always included
+        else:
+            st.error("Please select at least one metric.")
+
+        # Display charts for selected metrics
+        if filtered_df is not None:
+            for metric in selected_metrics:
+                if metric != 'DateTime':  # Skip plotting for DateTime column
+                    fig = px.line(filtered_df, x='DateTime', y=metric, labels={'DateTime': 'Date', metric: metric})
+                    fig.update_layout(
+                        xaxis_title='',
+                        yaxis_title='',
+                        width=chart_width,
+                        height=chart_height,
+                        margin=dict(l=0, r=40, t=0, b=0),  # Set margin to 40px on the right
+                        paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
+                        plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
+                        legend=dict(
+                            orientation='h',  # Horizontal orientation
+                            yanchor='bottom',  # Anchor legend to the bottom of the plot area
+                            y=1.02,  # Adjust vertical position
+                            xanchor='right',  # Anchor legend to the right of the plot area
+                            x=1  # Adjust horizontal position
+                        ),
+                        xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+                        yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+                    )
+                    st.plotly_chart(fig)
+
     else:
-        st.error("Please select at least one metric.")
-
-    # Display charts for selected metrics
-    if filtered_df is not None:
-        for metric in selected_metrics:
-            if metric != 'DateTime':  # Skip plotting for DateTime column
-                fig = px.line(filtered_df, x='DateTime', y=metric, labels={'DateTime': 'Date', metric: metric})
-                fig.update_layout(
-                    xaxis_title='',
-                    yaxis_title='',
-                    width=chart_width,
-                    height=chart_height,
-                    margin=dict(l=0, r=40, t=0, b=0),  # Set margin to 40px on the right
-                    paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
-                    plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
-                    legend=dict(
-                        orientation='h',  # Horizontal orientation
-                        yanchor='bottom',  # Anchor legend to the bottom of the plot area
-                        y=1.02,  # Adjust vertical position
-                        xanchor='right',  # Anchor legend to the right of the plot area
-                        x=1  # Adjust horizontal position
-                    ),
-                    xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                    yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                )
-                st.plotly_chart(fig)
+        st.warning("No metrics found in the uploaded file.")
 
