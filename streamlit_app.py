@@ -7,16 +7,20 @@ def parse_xml(xml_file):
     tree = ET.parse(xml_file)
     root = tree.getroot()
     
+    # Define the namespace dictionary
+    namespaces = {'raml': 'raml20.xsd'}
+    
     data = []
     
-    for mo in root.findall('.//{raml20.xsd}managedObject'):  # Assuming namespace is raml20.xsd
+    for mo in root.findall('.//raml:managedObject', namespaces):  
         mo_class = mo.get('class')
         dist_name = mo.get('distName')
         id = mo.get('id')
         
-        name = mo.find(".//{raml20.xsd}p[@name='name']").text
-        old_dn = mo.find(".//{raml20.xsd}p[@name='oldDN']").text
-        bts_name = mo.find(".//{raml20.xsd}p[@name='btsName']").text
+        # Use namespace in XPath queries
+        name = mo.find("raml:p[@name='name']", namespaces).text
+        old_dn = mo.find("raml:p[@name='oldDN']", namespaces).text
+        bts_name = mo.find("raml:p[@name='btsName']", namespaces).text
         
         data.append({
             'Class': mo_class,
