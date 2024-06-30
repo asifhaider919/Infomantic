@@ -32,7 +32,7 @@ if uploaded_file is not None:
             item_data = df[df['items'] == item]
             
             # Create an interactive plot using Plotly
-            fig = px.line(item_data, x='DateTime', y=item_data.columns[2:], title=f'{item}')
+            fig = px.line(item_data, x='DateTime', y=item_data.columns[2:])
             fig.update_layout(
                 xaxis_title='',
                 yaxis_title='',
