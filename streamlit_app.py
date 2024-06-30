@@ -42,9 +42,9 @@ if uploaded_file is not None:
             format="YYYY-MM-DD HH:mm:ss"
         )
 
-        # Convert start_date and end_date to datetime64[ns]
-        start_date = pd.to_datetime(start_date)
-        end_date = pd.to_datetime(end_date)
+        # Convert start_date and end_date to pandas Timestamp
+        start_date = pd.Timestamp(start_date)
+        end_date = pd.Timestamp(end_date)
 
     else:
         st.sidebar.warning("No DateTime column found in the uploaded file.")
