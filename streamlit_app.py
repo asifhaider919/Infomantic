@@ -9,6 +9,9 @@ st.set_page_config(layout="wide")
 st.sidebar.header("File Upload")
 uploaded_file = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
 
+# Default chart height
+default_chart_height = 300
+
 if uploaded_file is not None:
     # Load the Excel file
     df = pd.read_excel(uploaded_file)
@@ -19,7 +22,7 @@ if uploaded_file is not None:
     # Sidebar for controlling chart dimensions
     st.sidebar.header("Chart Settings")
     chart_width = st.sidebar.slider("Chart Width", min_value=500, max_value=3000, value=800)
-    chart_height = st.sidebar.slider("Chart Height", min_value=300, max_value=1000, value=600)
+    chart_height = st.sidebar.slider("Chart Height", min_value=300, max_value=1000, value=default_chart_height)
 
     # Ensure the 'items' column exists
     if 'items' in df.columns:
@@ -38,7 +41,7 @@ if uploaded_file is not None:
                 yaxis_title='',
                 width=chart_width,
                 height=chart_height,
-                margin=dict(l=0, r=0, t=0, b=0),  # Set margin to 0 on all sides
+                margin=dict(l=0, r=40, t=40, b=0),  # Set margin to 40px on the right
                 paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
                 plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
                 legend=dict(orientation='h', yanchor='top', y=1.1, xanchor='left', x=0.5),  # Legend position
