@@ -67,6 +67,7 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                     	f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
+                                    	f"<b>CONFIG:</b> {row['CONFIG']}<br>" \
                                     	f"<b>Longitude:</b> {row['Lon']}<br>" \
                                     	f"<b>Latitude:</b> {row['Lat']}<br>" \
                                     	f"<b>Issue:</b> {row['Issue']}<br>"
@@ -92,6 +93,7 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
                     # Create a popup message with site information
                     popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                     f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
+                                    f"<b>CONFIG:</b> {row['CONFIG']}<br>" \
                                     f"<b>Longitude:</b> {row['Lon']}<br>" \
                                     f"<b>Latitude:</b> {row['Lat']}<br>" \
                                     f"<b>Issue:</b> {row['Issue']}<br>"
