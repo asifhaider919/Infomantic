@@ -64,8 +64,8 @@ if uploaded_file is not None:
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                     	f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
-                                    	f"<b>Longitude:</b> {row['Lon']}<br>"
-                                    	f"<b>Latitude:</b> {row['Lat']}<br>"
+                                    	f"<b>Longitude:</b> {row['Lon']}<br>" \
+                                    	f"<b>Latitude:</b> {row['Lat']}<br>" \
                                     	f"<b>Issue:</b> {row['Issue']}<br>"
 
                         folium.CircleMarker(
@@ -89,8 +89,8 @@ if uploaded_file is not None:
                     # Create a popup message with site information
                     popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                     f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
-                                    f"<b>Longitude:</b> {row['Lon']}<br>"
-                                    f"<b>Latitude:</b> {row['Lat']}<br>"
+                                    f"<b>Longitude:</b> {row['Lon']}<br>" \
+                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
                                     f"<b>Issue:</b> {row['Issue']}<br>"
 
                     folium.CircleMarker(
