@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from datetime import datetime
-import fnmatch
 
 # Set wide layout
 st.set_page_config(layout="wide")
@@ -16,6 +16,9 @@ default_chart_height = 300
 
 # Default date range based on DataFrame if available
 date_range = None
+
+# Default vertical line position
+default_vertical_line_position = None
 
 if uploaded_file is not None:
     # Load the Excel file
@@ -80,6 +83,14 @@ if uploaded_file is not None:
             # Create two columns for displaying charts side by side
             col1, col2 = st.columns(2)
 
+            # Vertical line position
+            vertical_line_position = st.sidebar.slider(
+                "Vertical Line Position",
+                min_value=start_date,
+                max_value=end_date,
+                value=default_vertical_line_position or start_date  # Default to start_date if not set
+            )
+
             # Iterate through each selected metric
             for i, col in enumerate(selected_metrics, start=1):
                 if col == all_metrics_option:
@@ -90,6 +101,10 @@ if uploaded_file is not None:
 
                 # Create an interactive plot using Plotly for each metric
                 fig = px.line(filtered_df, x='DateTime', y=col, color='items', labels={'items': col})  # Use column name as legend
+
+                # Add vertical line
+                fig.add_vline(x=vertical_line_position, line_dash="dash", line_color="red")
+
                 fig.update_layout(
                     xaxis_title='',
                     yaxis_title='',
