@@ -38,8 +38,10 @@ if uploaded_file is not None:
             # Sidebar for issue category legend
             st.sidebar.subheader("Issue Category Legend")
             issue_categories = data['Issue'].unique()
+            color_map = {issue: 'red' for issue in issue_categories}  # Default color is red
+            
             for issue in issue_categories:
-                st.sidebar.markdown(f"<span style='background-color: {folium.Icon(color='blue').color}; padding: 5px;'>{issue}</span>", unsafe_allow_html=True)
+                st.sidebar.markdown(f"<span style='background-color: {color_map[issue]}; padding: 5px;'>{issue}</span>", unsafe_allow_html=True)
 
             # Create initial map centered around the mean location of all data
             m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=7)
