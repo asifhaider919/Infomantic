@@ -11,7 +11,7 @@ st.sidebar.header("File Upload")
 uploaded_file = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
 
 # Default chart height
-default_chart_height = 200  # Changed to 200
+default_chart_height = 300
 
 # Default date range based on DataFrame if available
 date_range = None
@@ -26,7 +26,7 @@ if uploaded_file is not None:
     # Sidebar for controlling chart dimensions
     st.sidebar.header("Chart Settings")
     chart_width = st.sidebar.slider("Chart Width", min_value=500, max_value=3000, value=800)
-    chart_height = st.sidebar.slider("Chart Height", min_value=100, max_value=1000, value=default_chart_height)
+    chart_height = st.sidebar.slider("Chart Height", min_value=300, max_value=1000, value=default_chart_height)
 
     # Determine date range from DataFrame
     if 'DateTime' in df.columns:
@@ -64,18 +64,21 @@ if uploaded_file is not None:
             filter_text = st.sidebar.text_input("Filter Metrics", "")
 
             # Filter metrics for autocomplete suggestions
-            filtered_metrics = [metric for metric in available_metrics if fnmatch.fnmatch(metric.lower(), f'*{filter_text.lower()}*')]
+            filtered_metrics = [metric for metric in available_metrics if filter_text.lower() in metric.lower()]
 
             # Show autocomplete suggestions in a selectbox
-            selected_metric = st.sidebar.selectbox("Select Metric", [""] + filtered_metrics)
-
-            # Handle selection of metrics
-            if selected_metric:
-                selected_metrics = [selected_metric]
-            else:
-                selected_metrics = []  # No metric selected
+            selected_metrics = st.sidebar.multiselect("Select Metrics", filtered_metrics, default=filtered_metrics)
 
         if len(selected_metrics) > 0:
+            # Slider for vertical line position
+            vertical_line_position = st.sidebar.slider(
+                "Vertical Line Position",
+                min_value=0,
+                max_value=len(df) - 1,
+                value=len(df) // 2,
+                format="%d"
+            )
+
             # Create two columns for displaying charts side by side
             col1, col2 = st.columns(2)
 
@@ -108,11 +111,15 @@ if uploaded_file is not None:
                     yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 )
 
+                # Add vertical line to the plot
+                fig.add_vline(x=filtered_df.iloc[vertical_line_position]['DateTime'], line_width=2, line_dash="dash", line_color="red")
+
                 # Alternate placing charts in col1 and col2
                 if i % 2 == 1:
                     col1.plotly_chart(fig)
                 else:
                     col2.plotly_chart(fig)
+
         else:
             st.warning("Please select at least one metric to display.")
     else:
