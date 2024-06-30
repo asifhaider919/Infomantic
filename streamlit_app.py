@@ -8,7 +8,7 @@ st.set_page_config(layout="wide")
 
 # Title of the app
 # Title of the app with reduced size
-st.markdown("<h2 style='text-align: center;'>Upload File to Plot Sites on Map</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: left;'>Map Display</h2>", unsafe_allow_html=True)
 
 
 # Sidebar for file upload
