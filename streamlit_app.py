@@ -35,30 +35,22 @@ if uploaded_file is not None:
             st.sidebar.subheader("Filter by Site Name")
             search_site_name = st.sidebar.text_input("Enter Site Name")
 
-            # Sidebar for issue category selection
-            st.sidebar.subheader("Filter by Issue Category")
+            # Sidebar for issue category legend
+            st.sidebar.subheader("Issue Category Legend")
             issue_categories = data['Issue'].unique()
-            selected_issues = st.sidebar.multiselect("Select Issue Categories", issue_categories, default=issue_categories)
-            
+            for issue in issue_categories:
+                st.sidebar.markdown(f"<span style='background-color: {folium.Icon(color='blue').color}; padding: 5px;'>{issue}</span>", unsafe_allow_html=True)
+
             # Create initial map centered around the mean location of all data
             m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=7)
             
-            # Filter data based on the selected issues
-            filtered_data = data[data['Issue'].isin(selected_issues)]
-            
-            # Further filter data based on site name if provided
-            if search_site_name:
-                filtered_data = filtered_data[filtered_data['Site'].str.contains(search_site_name, case=False)]
-            
             # Define a color map for issues
-            color_map = {issue: folium.Icon(color='blue', icon='circle') for issue in issue_categories}
-            for idx, issue in enumerate(issue_categories):
-                color = f"#{idx:02x}{idx:02x}{idx:02x}"  # Generate a unique color for each issue
-                color_map[issue] = folium.Icon(color=color, icon='circle')
-            
-            for idx, row in filtered_data.iterrows():
+            colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'white', 'pink', 'lightblue', 'lightgreen', 'gray', 'black', 'lightgray']
+            color_map = {issue: colors[i % len(colors)] for i, issue in enumerate(issue_categories)}
+
+            for idx, row in data.iterrows():
                 # Determine marker color based on issue category
-                icon = color_map.get(row['Issue'], folium.Icon(color='gray', icon='circle'))
+                color = color_map.get(row['Issue'], 'blue')
                 
                 # Create a popup message with site information
                 popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
@@ -66,10 +58,14 @@ if uploaded_file is not None:
                                 f"<b>Longitude:</b> {row['Lon']}<br>" \
                                 f"<b>Issue:</b> {row['Issue']}<br>"
 
-                folium.Marker(
+                folium.CircleMarker(
                     location=[row['Lat'], row['Lon']],
-                    popup=folium.Popup(popup_message, max_width=400),
-                    icon=icon
+                    radius=6,
+                    color=color,
+                    fill=True,
+                    fill_color=color,
+                    fill_opacity=0.4,
+                    popup=folium.Popup(popup_message, max_width=400)
                 ).add_to(m)
             
             # Display the map in the Streamlit app
