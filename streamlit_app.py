@@ -45,23 +45,25 @@ if uploaded_file is not None:
                               (first_site['Lat'] + 0.05, first_site['Lon'] + 0.05)]
                     
                     for idx, row in data.iterrows():
-                        # Determine marker icon
+                        # Determine marker color
                         if row['Site'] in filtered_data['Site'].values:
-                            # Use a custom square icon for filtered sites
-                            icon = folium.Icon(color='red', icon='fa-square-o', prefix='fa')
+                            color = 'red'
                         else:
-                            # Default symbol for other sites
-                            icon = folium.Icon(color='red', icon='flag', prefix='fa')
+                            color = 'blue'
 
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                         f"<b>Latitude:</b> {row['Lat']}<br>" \
                                         f"<b>Longitude:</b> {row['Lon']}<br>"
 
-                        folium.Marker(
+                        folium.CircleMarker(
                             location=[row['Lat'], row['Lon']],
-                            popup=folium.Popup(popup_message, max_width=400),
-                            icon=icon
+                            radius=6,
+                            color=color,
+                            fill=True,
+                            fill_color=color,
+                            fill_opacity=0.6,
+                            popup=folium.Popup(popup_message, max_width=400)
                         ).add_to(m)
                     
                     # Fit the map to the bounds
@@ -73,10 +75,14 @@ if uploaded_file is not None:
                                     f"<b>Latitude:</b> {row['Lat']}<br>" \
                                     f"<b>Longitude:</b> {row['Lon']}<br>"
 
-                    folium.Marker(
+                    folium.CircleMarker(
                         location=[row['Lat'], row['Lon']],
-                        popup=folium.Popup(popup_message, max_width=400),
-                        icon=folium.Icon(color='blue', icon='cloud')
+                        radius=6,
+                        color='blue',
+                        fill=True,
+                        fill_color='blue',
+                        fill_opacity=0.6,
+                        popup=folium.Popup(popup_message, max_width=400)
                     ).add_to(m)
 
             # Display the map in the Streamlit app
