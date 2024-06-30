@@ -20,7 +20,7 @@ st.markdown("<h2 style='text-align: left;'>Network Capacity Limitation / Frame L
 # Function to load default dataset from GitHub
 @st.cache
 def load_default_dataset():
-    url = 'https://github.com/asifhaider919/Infomantic/blob/master/DataInput.xlsx'
+    url = 'https://raw.githubusercontent.com/asifhaider919/Infomantic/master/DataInput.xlsx'
     response = requests.get(url)
     return pd.read_excel(BytesIO(response.content))
 
