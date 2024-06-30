@@ -92,7 +92,6 @@ if uploaded_file is not None:
 
                 # Create an interactive plot using Plotly for each metric
                 fig = px.line(filtered_df, x='DateTime', y=col, color='items', labels={'items': col})  # Use column name as legend
-                fig.update_traces(line=dict(color='royalblue'))  # Change line color to royalblue
                 fig.update_layout(
                     xaxis_title='',
                     yaxis_title='',
@@ -107,9 +106,7 @@ if uploaded_file is not None:
                         y=1.02,  # Adjust vertical position
                         xanchor='right',  # Anchor legend to the right of the plot area
                         x=1,  # Adjust horizontal position
-                        font=dict(
-                            color="darkblue"  # Set legend font color to dark blue
-                        )
+                        font=dict(color="darkblue")  # Set legend font color to dark blue
                     ),
                     xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                     yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
