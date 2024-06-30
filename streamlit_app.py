@@ -16,6 +16,9 @@ default_chart_height = 300
 # Default date range based on DataFrame if available
 date_range = None
 
+# Variable for vertical line position
+vertical_line_position = None
+
 if uploaded_file is not None:
     # Load the Excel file
     df = pd.read_excel(uploaded_file)
@@ -45,6 +48,15 @@ if uploaded_file is not None:
         # Convert start_date and end_date to pandas Timestamp
         start_date = pd.Timestamp(start_date)
         end_date = pd.Timestamp(end_date)
+
+        # Slider for vertical line position
+        vertical_line_position = st.sidebar.slider(
+            "Vertical Line Position",
+            min_value=pd.Timestamp(df['DateTime'].min()),
+            max_value=pd.Timestamp(df['DateTime'].max()),
+            value=pd.Timestamp(df['DateTime'].min()),  # Default to minimum date initially
+            format="YYYY-MM-DD HH:mm:ss"
+        )
 
     else:
         st.sidebar.warning("No DateTime column found in the uploaded file.")
@@ -102,6 +114,10 @@ if uploaded_file is not None:
                     xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                     yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 )
+
+                # Add vertical line to the plot if position is selected
+                if vertical_line_position:
+                    fig.add_vline(x=vertical_line_position, line_width=2, line_dash="dash", line_color="red")
 
                 # Alternate placing charts in col1 and col2
                 if i % 2 == 1:
