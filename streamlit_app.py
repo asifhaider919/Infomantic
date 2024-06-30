@@ -6,6 +6,49 @@ from datetime import datetime
 # Set wide layout
 st.set_page_config(layout="wide")
 
+# Function to create charts for a specific tab
+def create_tab_charts(df, start_date, end_date, tab_name, chart_width, chart_height):
+    # Filter data based on selected date range
+    filtered_df = df[(df['DateTime'] >= start_date) & (df['DateTime'] <= end_date)]
+
+    # Create an empty list to store charts
+    charts = []
+
+    # Iterate through each metric column (starting from the 3rd column)
+    for i, col in enumerate(filtered_df.columns[2:], start=1):
+        # Create an interactive plot using Plotly for each metric
+        fig = px.line(filtered_df, x='DateTime', y=col, color='items', labels={'items': col})  # Use column name as legend
+        fig.update_layout(
+            xaxis_title='',
+            yaxis_title='',
+            width=chart_width,
+            height=chart_height,
+            margin=dict(l=0, r=40, t=0, b=0),  # Set margin to 40px on the right
+            paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
+            plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
+            legend=dict(
+                orientation='h',  # Horizontal orientation
+                yanchor='bottom',  # Anchor legend to the bottom of the plot area
+                y=1.02,  # Adjust vertical position
+                xanchor='right',  # Anchor legend to the right of the plot area
+                x=1  # Adjust horizontal position
+            ),
+            xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+            yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+        )
+
+        # Append the chart to the list of charts
+        charts.append(fig)
+
+        # Display 10 charts per tab
+        if i % 10 == 0:
+            st.plotly_chart(charts)
+            charts = []
+
+    # Display any remaining charts
+    if charts:
+        st.plotly_chart(charts)
+
 # Sidebar for file upload
 st.sidebar.header("File Upload")
 uploaded_file = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
@@ -45,49 +88,19 @@ if uploaded_file is not None:
         start_date = pd.to_datetime(start_date)
         end_date = pd.to_datetime(end_date)
 
-        # Filter data based on selected date range
-        filtered_df = df[(df['DateTime'] >= start_date) & (df['DateTime'] <= end_date)]
-
-        # Ensure the 'items' column exists
-        if 'items' in df.columns:
-            # Get unique items
-            items = df['items'].unique()
-
-            # Display charts based on selected tab
-            selected_tab = st.sidebar.radio("View Charts", items)
-
-            # Check if selected_tab exists in filtered_df.columns
-            if selected_tab in filtered_df.columns:
-                # Check if 'PLMN' column exists in filtered_df
-                if 'PLMN' in filtered_df.columns:
-                    # Create an interactive plot using Plotly for each metric
-                    fig = px.line(filtered_df, x='DateTime', y=selected_tab, color='PLMN', labels={'PLMN': selected_tab})  # Use column name as legend
-                    fig.update_layout(
-                        xaxis_title='',
-                        yaxis_title='',
-                        width=chart_width,
-                        height=chart_height,
-                        margin=dict(l=0, r=40, t=40, b=0),  # Adjust margins as needed
-                        paper_bgcolor='rgb(240, 240, 240)',  # Set paper background color to a lighter gray (RGB values)
-                        plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
-                        legend=dict(
-                            orientation='h',  # Horizontal orientation
-                            yanchor='bottom',  # Anchor legend to the bottom of the plot area
-                            y=1.02,  # Adjust vertical position
-                            xanchor='right',  # Anchor legend to the right of the plot area
-                            x=1  # Adjust horizontal position
-                        ),
-                        xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                        yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                    )
-
-                    # Plotly chart
-                    st.plotly_chart(fig)
-                else:
-                    st.error("'PLMN' column not found in filtered data. Please select another tab.")
-            else:
-                st.error(f"{selected_tab} column not found in filtered data. Please select another tab.")
-        else:
-            st.error("'items' column not found in the uploaded file. Please check the column names.")
     else:
         st.sidebar.warning("No DateTime column found in the uploaded file.")
+
+    # Ensure the 'items' column exists
+    if 'items' in df.columns:
+        # Get unique items
+        items = df['items'].unique()
+
+        # Create tabs for displaying charts
+        with st.sidebar.beta_expander("View Charts"):
+            for item in items:
+                with st.beta_expander(f"Tab: {item}"):
+                    create_tab_charts(df[df['items'] == item], start_date, end_date, item, chart_width, chart_height)
+
+    else:
+        st.error("'items' column not found in the uploaded file. Please check the column names.")
