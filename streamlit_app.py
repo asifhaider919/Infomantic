@@ -39,7 +39,6 @@ if uploaded_file is not None:
                 paper_bgcolor='rgba(0,0,0,0)',  # Make background transparent
                 plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
                 legend=dict(orientation='h', yanchor='top', y=1.1, xanchor='left', x=0.5),  # Legend position
-                plot_bgcolor='rgba(0,0,0,0)',  # Make plot area transparent
                 xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 plot_bordercolor='lightgray',   # Set plot area border color
