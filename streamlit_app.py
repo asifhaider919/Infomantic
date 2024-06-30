@@ -51,7 +51,7 @@ if uploaded_file is not None:
     # Ensure the 'items' column exists
     if 'items' in df.columns:
         # Multiselect for filtering metrics
-        selected_metrics = st.sidebar.multiselect("Select Metrics", df.columns[2:], default=df.columns[2:])
+        selected_metrics = st.sidebar.multiselect("Select Metrics", df.columns[2:].tolist(), default=df.columns[2:].tolist())
 
         # Create two columns for displaying charts side by side
         col1, col2 = st.columns(2)
