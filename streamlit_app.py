@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 from datetime import datetime
 
 # Set wide layout
@@ -16,9 +15,6 @@ default_chart_height = 300
 
 # Default date range based on DataFrame if available
 date_range = None
-
-# Default vertical line position
-default_vertical_line_position = None
 
 if uploaded_file is not None:
     # Load the Excel file
@@ -68,28 +64,23 @@ if uploaded_file is not None:
             filter_text = st.sidebar.text_input("Filter Metrics", "")
 
             # Filter metrics for autocomplete suggestions
-            filtered_metrics = [metric for metric in available_metrics if fnmatch.fnmatch(metric.lower(), f'*{filter_text.lower()}*')]
+            filtered_metrics = [metric for metric in available_metrics if filter_text.lower() in metric.lower()]
 
             # Show autocomplete suggestions in a selectbox
-            selected_metric = st.sidebar.selectbox("Select Metric", [""] + filtered_metrics)
-
-            # Handle selection of metrics
-            if selected_metric:
-                selected_metrics = [selected_metric]
-            else:
-                selected_metrics = []  # No metric selected
+            selected_metrics = st.sidebar.multiselect("Select Metrics", filtered_metrics, default=filtered_metrics)
 
         if len(selected_metrics) > 0:
-            # Create two columns for displaying charts side by side
-            col1, col2 = st.columns(2)
-
-            # Vertical line position
+            # Vertical line position selector
             vertical_line_position = st.sidebar.slider(
                 "Vertical Line Position",
                 min_value=start_date,
                 max_value=end_date,
-                value=default_vertical_line_position or start_date  # Default to start_date if not set
+                value=start_date,
+                format="MM/DD/YYYY"
             )
+
+            # Create two columns for displaying charts side by side
+            col1, col2 = st.columns(2)
 
             # Iterate through each selected metric
             for i, col in enumerate(selected_metrics, start=1):
@@ -101,10 +92,6 @@ if uploaded_file is not None:
 
                 # Create an interactive plot using Plotly for each metric
                 fig = px.line(filtered_df, x='DateTime', y=col, color='items', labels={'items': col})  # Use column name as legend
-
-                # Add vertical line
-                fig.add_vline(x=vertical_line_position, line_dash="dash", line_color="red")
-
                 fig.update_layout(
                     xaxis_title='',
                     yaxis_title='',
@@ -124,11 +111,15 @@ if uploaded_file is not None:
                     yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 )
 
+                # Add vertical line to the plot
+                fig.add_vline(x=vertical_line_position, line_dash="dash", line_color="red")
+
                 # Alternate placing charts in col1 and col2
                 if i % 2 == 1:
                     col1.plotly_chart(fig)
                 else:
                     col2.plotly_chart(fig)
+
         else:
             st.warning("Please select at least one metric to display.")
     else:
