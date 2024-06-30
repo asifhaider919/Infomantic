@@ -39,8 +39,8 @@ if uploaded_file is not None:
                 filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
                 if not filtered_data.empty:
                     for idx, row in data.iterrows():
-                        # Determine marker icon with asterisk shape
-                        icon = folium.Icon(color='red', icon='glyphicon glyphicon-asterisk')
+                        # Determine marker icon with square shape
+                        icon = folium.Icon(color='red', icon='square')
 
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
@@ -65,7 +65,7 @@ if uploaded_file is not None:
                     folium.Marker(
                         location=[row['Lat'], row['Lon']],
                         popup=folium.Popup(popup_message, max_width=400),
-                        icon=folium.Icon(color='blue', icon='glyphicon glyphicon-asterisk')
+                        icon=folium.Icon(color='blue', icon='square')
                     ).add_to(m)
 
             # Display the map in the Streamlit app
