@@ -89,7 +89,7 @@ if uploaded_file is not None:
                     ).add_to(m)
 
             # Display the map in the Streamlit app
-            folium_static(m, width=900, height=700)
+            folium_static(m, width=1200, height=700)
 
     except Exception as e:
         st.sidebar.error(f"An error occurred while processing the file: {e}")
