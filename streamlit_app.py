@@ -51,7 +51,7 @@ if uploaded_file is not None:
                             icon = folium.Icon(color='red', icon='fa-square-o', prefix='fa')
                         else:
                             # Default symbol for other sites
-                            icon = folium.Icon(color='red', icon='star', prefix='fa')
+                            icon = folium.Icon(color='red', icon='flag', prefix='fa')
 
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
