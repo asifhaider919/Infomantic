@@ -77,4 +77,11 @@ if uploaded_file is not None:
                 x=1  # Adjust horizontal position
             ),
             xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-            yaxis=dict(showgrid=False, zeroline=False),  # Hide gridline
+            yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
+        )
+
+        # Plotly chart
+        st.plotly_chart(fig)
+
+    else:
+        st.error("'items' column not found in the uploaded file. Please check the column names.")
