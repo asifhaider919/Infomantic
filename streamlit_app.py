@@ -51,7 +51,15 @@ if uploaded_file is not None:
     # Ensure the 'items' column exists
     if 'items' in df.columns:
         # Multiselect dropdown for selecting metrics
-        selected_metrics = st.sidebar.multiselect("Select Metrics", options=df.columns[2:].tolist(), default=df.columns[2:].tolist())
+        all_metrics_option = "All Metrics"
+        selected_metrics = st.sidebar.multiselect(
+            "Select Metrics",
+            options=[all_metrics_option] + df.columns[2:].tolist(),
+            default=[all_metrics_option]
+        )
+
+        if all_metrics_option in selected_metrics:
+            selected_metrics = df.columns[2:].tolist()  # Display all metrics
 
         if len(selected_metrics) > 0:
             # Create two columns for displaying charts side by side
@@ -59,6 +67,9 @@ if uploaded_file is not None:
 
             # Iterate through each selected metric
             for i, col in enumerate(selected_metrics, start=1):
+                if col == all_metrics_option:
+                    continue  # Skip "All Metrics" option in individual charts
+
                 # Filter data based on selected date range and metric
                 filtered_df = df[(df['DateTime'] >= start_date) & (df['DateTime'] <= end_date)]
 
