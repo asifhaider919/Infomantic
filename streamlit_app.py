@@ -28,10 +28,9 @@ if uploaded_file is not None:
 
         # Iterate through each metric column (starting from the 3rd column)
         for col in df.columns[2:]:
-            st.header(f'Metric: {col}')
             
             # Create an interactive plot using Plotly for each metric
-            fig = px.line(df, x='DateTime', y=col, color='items', title=f'Metric: {col}')
+            fig = px.line(df, x='DateTime', y=col, color='items')
             fig.update_layout(
                 xaxis_title='',
                 yaxis_title='',
