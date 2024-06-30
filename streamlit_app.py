@@ -30,8 +30,9 @@ if uploaded_file is not None:
             
             # Iterate through rows to draw lines
             for index, row in data.iterrows():
-                # Skip rows with missing or NaN values
-                if row.isnull().any():
+                # Skip rows with missing or NaN values in coordinates
+                if pd.isnull(row[['Lat_A', 'Lon_A', 'Lat_B', 'Lon_B']]).any():
+                    st.sidebar.warning(f"Skipping row {index+1}: Missing coordinates")
                     continue
                 
                 # Add a line from Lat_A/Lon_A to Lat_B/Lon_B
