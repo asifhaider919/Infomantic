@@ -20,39 +20,36 @@ if uploaded_file is not None:
     # Load the Excel file
     df = pd.read_excel(uploaded_file)
 
-    # Convert the DateTime column to pandas datetime type
-    df['DateTime'] = pd.to_datetime(df['DateTime'])
+    # Convert the DateTime column to pandas datetime type if available
+    if 'DateTime' in df.columns:
+        df['DateTime'] = pd.to_datetime(df['DateTime'])
+        date_range = (df['DateTime'].min(), df['DateTime'].max())
+    else:
+        st.sidebar.error("DateTime column not found in the uploaded file.")
 
     # Sidebar for controlling chart dimensions
     st.sidebar.header("Chart Settings")
     chart_width = st.sidebar.slider("Chart Width", min_value=500, max_value=3000, value=800)
     chart_height = st.sidebar.slider("Chart Height", min_value=300, max_value=1000, value=default_chart_height)
 
-    # Determine date range from DataFrame
-    if 'DateTime' in df.columns:
-        date_range = (df['DateTime'].min(), df['DateTime'].max())
-
     # DateTime slider in the sidebar
     if date_range:
         start_date, end_date = st.sidebar.slider(
             "Select Date Range",
-            min_value=datetime.date(date_range[0]),
-            max_value=datetime.date(date_range[1]),
-            value=(datetime.date(date_range[0]), datetime.date(date_range[1]))
+            min_value=date_range[0].date(),
+            max_value=date_range[1].date(),
+            value=(date_range[0].date(), date_range[1].date())
         )
 
         # Convert start_date and end_date to datetime64[ns]
         start_date = pd.to_datetime(start_date)
         end_date = pd.to_datetime(end_date)
 
-    else:
-        st.sidebar.warning("No DateTime column found in the uploaded file.")
-
     # Sidebar for filtering metrics
     st.sidebar.header("Filter Metrics")
 
-    # Get unique metrics
-    all_metrics = df.columns[2:] if 'DateTime' in df.columns else []  # Assuming metrics start from the third column
+    # Get unique metrics assuming they start from the third column
+    all_metrics = df.columns[2:].tolist() if 'DateTime' in df.columns else []
 
     if len(all_metrics) > 0:
         # Multiselect dropdown for selecting metrics
