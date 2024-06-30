@@ -102,7 +102,7 @@ if uploaded_file is not None:
                     plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
                     legend=dict(
                         orientation='h',  # Horizontal orientation
-                        yanchor='bottom',  # Anchor legend to the bottom of the plot area
+                        yanchor='top',  # Anchor legend to the bottom of the plot area
                         y=1.02,  # Adjust vertical position
                         xanchor='right',  # Anchor legend to the right of the plot area
                         x=1,  # Adjust horizontal position
