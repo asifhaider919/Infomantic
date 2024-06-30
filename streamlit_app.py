@@ -106,7 +106,7 @@ if uploaded_file is not None:
                         y=1.02,  # Adjust vertical position
                         xanchor='right',  # Anchor legend to the right of the plot area
                         x=1,  # Adjust horizontal position
-                        font=dict(color="darkblue")  # Set legend font color to dark blue
+                        font=dict(color="pink")  # Set legend font color to pink
                     ),
                     xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                     yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
