@@ -5,8 +5,6 @@ import plotly.express as px
 # Set wide layout
 st.set_page_config(layout="wide")
 
-st.title('Metrics for Each Item')
-
 # Sidebar for file upload
 st.sidebar.header("File Upload")
 uploaded_file = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
