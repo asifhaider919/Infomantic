@@ -78,4 +78,35 @@ if uploaded_file is not None:
                     m.fit_bounds(bounds)
             else:
                 for idx, row in data.iterrows():
-                    # Determine marker color based on
+                    # Determine marker color based on 'Issue' category
+                    category = row['Issue']
+                    if category in categories:
+                        color = colors[categories.index(category) % len(colors)]
+                    else:
+                        color = 'blue'  # Default color if category not found
+
+                    # Create a popup message with site information
+                    popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                    f"<b>Longitude:</b> {row['Lon']}<br>"
+
+                    folium.CircleMarker(
+                        location=[row['Lat'], row['Lon']],
+                        radius=6,
+                        color=color,
+                        fill=True,
+                        fill_color=color,
+                        fill_opacity=0.4,
+                        popup=folium.Popup(popup_message, max_width=400)
+                    ).add_to(m)
+
+            # Display the legend in the sidebar
+            st.sidebar.subheader("Legend")
+            for idx, category in enumerate(categories):
+                st.sidebar.checkbox(category, value=True, key=f"checkbox_{idx}")
+				
+            # Display the map in the Streamlit app
+            folium_static(m, width=1200, height=700)
+
+    except Exception as e:
+        st.sidebar.error(f"An error occurred while processing the file: {e}")
