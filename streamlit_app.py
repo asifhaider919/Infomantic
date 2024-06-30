@@ -39,8 +39,9 @@ if uploaded_file is not None:
                 folium.PolyLine(locations=[(row['Lat_A'], row['Lon_A']), (row['Lat_B'], row['Lon_B'])],
                                 color='blue').add_to(m)
             
-            # Display the map
-            folium_static(m)
+
+            # Display the map in the Streamlit app
+            folium_static(m, width=1200, height=700)
             
         else:
             st.sidebar.warning(f"Required columns {required_columns} not found in the file.")
