@@ -11,7 +11,7 @@ st.sidebar.header("File Upload")
 uploaded_file = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
 
 # Default chart height
-default_chart_height = 300
+default_chart_height = 200
 
 # Default date range based on DataFrame if available
 date_range = None
@@ -25,8 +25,8 @@ if uploaded_file is not None:
 
     # Sidebar for controlling chart dimensions
     st.sidebar.header("Chart Settings")
-    chart_width = st.sidebar.slider("Chart Width", min_value=500, max_value=3000, value=800)
-    chart_height = st.sidebar.slider("Chart Height", min_value=300, max_value=1000, value=default_chart_height)
+    chart_width = st.sidebar.slider("Chart Width", min_value=100, max_value=1000, value=800)
+    chart_height = st.sidebar.slider("Chart Height", min_value=100, max_value=1000, value=default_chart_height)
 
     # Determine date range from DataFrame
     if 'DateTime' in df.columns:
