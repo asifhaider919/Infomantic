@@ -7,7 +7,7 @@ from streamlit_folium import folium_static
 st.set_page_config(layout="wide")
 
 # Logo image URL (replace with your actual logo URL)
-logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuoM7k8aZGJNWdL39qNWuJMzGPrHyoIIR2sA&s"
+logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Kj80VCFDZV3eFqa8ppMxXlhxvjkr6XQ85A&s"
 
 # Display the logo at the top of the sidebar
 st.sidebar.image(logo_url, width=200)
