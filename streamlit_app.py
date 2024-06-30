@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from datetime import datetime
+import fnmatch
 
 # Set wide layout
 st.set_page_config(layout="wide")
@@ -56,15 +57,17 @@ if uploaded_file is not None:
 
         # Search box for filtering metrics by typing
         filter_text = st.sidebar.text_input("Filter Metrics", "")
-        filtered_metrics = [metric for metric in available_metrics if filter_text.lower() in metric.lower()]
 
-        selected_metrics = st.sidebar.multiselect(
-            "Select Metrics",
-            options=[all_metrics_option] + filtered_metrics,
-            default=[all_metrics_option]
-        )
+        # Filter metrics for autocomplete suggestions
+        filtered_metrics = [metric for metric in available_metrics if fnmatch.fnmatch(metric.lower(), f'*{filter_text.lower()}*')]
 
-        if all_metrics_option in selected_metrics:
+        # Show autocomplete suggestions in a selectbox
+        selected_metric = st.sidebar.selectbox("Select Metric", [""] + filtered_metrics)
+
+        # Handle selection of metrics
+        if selected_metric:
+            selected_metrics = [selected_metric]
+        else:
             selected_metrics = available_metrics  # Display all metrics
 
         if len(selected_metrics) > 0:
