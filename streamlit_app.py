@@ -13,11 +13,11 @@ logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Kj80VCFDZV3e
 st.sidebar.image(logo_url, width=200)
 
 # Title of the app
-st.title("Site and Transaction Map")
+# st.title("Site and Transaction Map")
 
 # Sidebar for file upload
-uploaded_file_site = st.sidebar.file_uploader("Upload Site Excel file", type=["xlsx"])
-uploaded_file_txn = st.sidebar.file_uploader("Upload TXN Excel file", type=["xlsx"])
+uploaded_file_site = st.sidebar.file_uploader("Upload Site Info file", type=["xlsx"])
+uploaded_file_txn = st.sidebar.file_uploader("Upload TXN Info file", type=["xlsx"])
 
 if uploaded_file_site is not None and uploaded_file_txn is not None:
     try:
@@ -142,7 +142,7 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
                 
 
                 # Display the combined map in the Streamlit app
-                st.subheader("Combined Site and Transaction Map")
+                # st.subheader("Combined Site and Transaction Map")
                 folium_static(combined_map, width=1200, height=700)
                 
             else:
