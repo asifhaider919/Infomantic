@@ -46,4 +46,4 @@ if uploaded_file is not None:
             )
             st.plotly_chart(fig)
     else:
-        st.error("'items' column not found in the uploaded file. Please check the column names.")
+        st.error("'items' column not found in the uploaded 
