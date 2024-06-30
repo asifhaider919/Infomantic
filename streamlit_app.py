@@ -108,8 +108,8 @@ if uploaded_file is not None:
                         x=1,  # Adjust horizontal position
                         font=dict(color="blue")  # Set legend font color to pink
                     ),
-                    xaxis=dict(showgrid=True, zeroline=False),  # Hide gridlines and zeroline
-                    yaxis=dict(showgrid=True, zeroline=False),  # Hide gridlines and zeroline
+                    xaxis=dict(showgrid=True, gridcolor='rgba(0,0,0,0.1)', zeroline=False),  # Show gridlines and customize color
+                    yaxis=dict(showgrid=True, gridcolor='rgba(0,0,0,0.1)', zeroline=False),  # Show gridlines and customize color
                 )
 
                 # Add vertical line to the plot
