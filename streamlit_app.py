@@ -6,15 +6,16 @@ from streamlit_folium import folium_static
 # Title of the app
 st.title("Upload File to Plot Sites on Map")
 
-# Upload CSV file for site data
-uploaded_file = st.file_uploader("Choose a CSV file", type=["csv", "xls", "xlsx"])
+# Sidebar for file upload
+st.sidebar.header("File Upload")
+uploaded_file = st.sidebar.file_uploader("Choose a CSV file", type=["csv", "xls", "xlsx"])
 
 if uploaded_file is not None:
     # Save the uploaded file
     with open(f"Input_Data.{uploaded_file.name.split('.')[-1]}", "wb") as f:
         f.write(uploaded_file.getbuffer())
     
-    st.success(f"File saved as Input_Data.{uploaded_file.name.split('.')[-1]}")
+    st.sidebar.success(f"File saved as Input_Data.{uploaded_file.name.split('.')[-1]}")
     
     try:
         # Read the uploaded file into a pandas DataFrame
@@ -25,7 +26,7 @@ if uploaded_file is not None:
         
         # Ensure the required columns are present
         if 'Lat' not in data.columns or 'Lon' not in data.columns or 'Site' not in data.columns:
-            st.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
+            st.sidebar.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
         else:
             # Sidebar filter by Site Name
             st.sidebar.subheader("Filter by Site Name")
@@ -82,4 +83,4 @@ if uploaded_file is not None:
             folium_static(m, width=900, height=700)
 
     except Exception as e:
-        st.error(f"An error occurred while processing the file: {e}")
+        st.sidebar.error(f"An error occurred while processing the file: {e}")
