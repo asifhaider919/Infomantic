@@ -30,7 +30,7 @@ if uploaded_file is not None:
         col1, col2 = st.columns(2)
 
         # Iterate through each metric column (starting from the 3rd column)
-        for col in df.columns[2:]:
+        for i, col in enumerate(df.columns[2:], start=1):
             # Create an interactive plot using Plotly for each metric
             fig = px.line(df, x='DateTime', y=col, color='items')
             fig.update_layout(
@@ -46,8 +46,8 @@ if uploaded_file is not None:
                 yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
             )
 
-            # Place each chart in its respective column
-            if col1.empty():
+            # Alternate placing charts in col1 and col2
+            if i % 2 == 1:
                 col1.plotly_chart(fig)
             else:
                 col2.plotly_chart(fig)
