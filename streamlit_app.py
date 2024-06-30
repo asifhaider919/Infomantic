@@ -26,13 +26,12 @@ if uploaded_file is not None:
         # Get unique items
         items = df['items'].unique()
 
-        # Iterate through each item and create a plot
-        for item in items:
-           
-            item_data = df[df['items'] == item]
+        # Iterate through each metric column (starting from the 3rd column)
+        for col in df.columns[2:]:
+            st.header(f'Metric: {col}')
             
-            # Create an interactive plot using Plotly
-            fig = px.line(item_data, x='DateTime', y=item_data.columns[2:])
+            # Create an interactive plot using Plotly for each metric
+            fig = px.line(df, x='DateTime', y=col, color='items', title=f'Metric: {col}')
             fig.update_layout(
                 xaxis_title='',
                 yaxis_title='',
