@@ -18,10 +18,10 @@ if uploaded_file is not None:
         data = pd.read_excel(uploaded_file)
         
         # Check for required columns
-        required_columns = ['Site_A', 'Site_B', 'Lat_A', 'Lon_A', 'Lat_B', 'Lon_B', 'CIR']
+        required_columns = ['Site_A', 'Site_B', 'Lat_A', 'Lon_A', 'Lat_B', 'Lon_B']
         if all(col in data.columns for col in required_columns):
             # Convert relevant columns to numeric (in case they are not already)
-            numeric_columns = ['Lat_A', 'Lon_A', 'Lat_B', 'Lon_B', 'CIR']
+            numeric_columns = ['Lat_A', 'Lon_A', 'Lat_B', 'Lon_B']
             data[numeric_columns] = data[numeric_columns].apply(pd.to_numeric, errors='coerce')
             
             # Create a map centered around the mean location of the data
@@ -34,12 +34,8 @@ if uploaded_file is not None:
                 if row.isnull().any():
                     continue
                 
-                # Determine line weight based on CIR column
-                weight = row['CIR']
-                
                 # Add a line from Lat_A/Lon_A to Lat_B/Lon_B
                 folium.PolyLine(locations=[(row['Lat_A'], row['Lon_A']), (row['Lat_B'], row['Lon_B'])],
-                                weight=weight,
                                 color='blue').add_to(m)
             
             # Display the map
@@ -50,4 +46,3 @@ if uploaded_file is not None:
     
     except Exception as e:
         st.sidebar.error(f"Error: {e}")
-
