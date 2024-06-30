@@ -28,14 +28,18 @@ if uploaded_file is not None:
 
         # Iterate through each metric column (starting from the 3rd column)
         for col in df.columns[2:]:
-            
             # Create an interactive plot using Plotly for each metric
             fig = px.line(df, x='DateTime', y=col, color='items')
             fig.update_layout(
                 xaxis_title='',
                 yaxis_title='',
                 width=chart_width,
-                height=chart_height
+                height=chart_height,
+                margin=dict(l=40, r=40, t=40, b=40),  # Adjust margin to add padding
+                paper_bgcolor='rgba(0,0,0,0)',  # Make background transparent
+                plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
+                bordercolor='lightgray',        # Set border color
+                borderwidth=1                   # Set border width
             )
             st.plotly_chart(fig)
     else:
