@@ -7,10 +7,10 @@ from streamlit_folium import folium_static
 st.set_page_config(layout="wide")
 
 # Logo image URL (replace with your actual logo URL)
-logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Kj80VCFDZV3eFqa8ppMxXlhxvjkr6XQ85A&s"
+#logo_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Kj80VCFDZV3eFqa8ppMxXlhxvjkr6XQ85A&s"
 
 # Display the logo at the top of the sidebar
-st.sidebar.image(logo_url, width=200)
+#st.sidebar.image(logo_url, width=200)
 
 # Title of the app
 # st.title("Site and Transaction Map")
@@ -67,7 +67,6 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                     	f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
-                                    	f"<b>CONFIG:</b> {row['CONFIG']}<br>" \
                                     	f"<b>Longitude:</b> {row['Lon']}<br>" \
                                     	f"<b>Latitude:</b> {row['Lat']}<br>" \
                                     	f"<b>Issue:</b> {row['Issue']}<br>"
@@ -93,7 +92,6 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
                     # Create a popup message with site information
                     popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
                                     f"<b>SITECODE:</b> {row['SITECODE']}<br>" \
-                                    f"<b>CONFIG:</b> {row['CONFIG']}<br>" \
                                     f"<b>Longitude:</b> {row['Lon']}<br>" \
                                     f"<b>Latitude:</b> {row['Lat']}<br>" \
                                     f"<b>Issue:</b> {row['Issue']}<br>"
