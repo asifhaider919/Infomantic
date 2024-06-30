@@ -35,7 +35,7 @@ if uploaded_file is not None:
                 yaxis_title='',
                 width=chart_width,
                 height=chart_height,
-                margin=dict(l=0, r=0, t=0, b=0),  # Adjust margin to add padding
+                margin=dict(l=0, r=40, t=0, b=0),  # Adjust margin to add padding
                 paper_bgcolor='rgb(240, 240, 240)', # Make background transparent
                 plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
                 legend=dict(orientation='h', yanchor='top', y=1.1, xanchor='left', x=0.5),  # Legend position
