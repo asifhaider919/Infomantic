@@ -41,8 +41,9 @@ if uploaded_file is not None:
                 legend=dict(orientation='h', yanchor='top', y=1.1, xanchor='left', x=0.5),  # Legend position
                 xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
-                plot_bordercolor='lightgray',  # Set plot area border color
-                plot_borderwidth=1,            # Set plot area border width
+                # Set plot area border color and width
+                plot_bordercolor='lightgray',
+                plot_borderwidth=1,
             )
             st.plotly_chart(fig)
     else:
