@@ -44,7 +44,7 @@ if uploaded_file is not None:
 
             # Assign light green to a specific category
             # Example: Assign 'lightgreen' to the category 'OK'
-            colors[categories.index('OK')] = 'lightgreen'
+            colors[categories.index('OK')] = 'green'
 		
             # Sidebar filter by Site Name
             search_site_name = st.sidebar.text_input("Enter Site Name")
