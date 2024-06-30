@@ -134,8 +134,11 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
                         continue
                     
                     # Add a line from Lat_A/Lon_A to Lat_B/Lon_B
-                    folium.PolyLine(locations=[(row['Lat_A'], row['Lon_A']), (row['Lat_B'], row['Lon_B'])],
-                                    color='blue').add_to(combined_map)
+                    folium.PolyLine(
+                        locations=[(row['Lat_A'], row['Lon_A']), (row['Lat_B'], row['Lon_B'])],
+                        color='#FA5733',  # Change color here
+                        weight=2  # Change line weight here
+                    ).add_to(combined_map)
                 
 
                 # Display the combined map in the Streamlit app
