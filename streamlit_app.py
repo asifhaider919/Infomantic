@@ -40,11 +40,11 @@ if uploaded_file is not None:
             categories = data['Issue'].unique().tolist()
             
             # Extend colors list to accommodate up to 10 categories
-            colors = ['green', 'orange', 'red', 'blue', 'purple', 'black', 'magenta', 'yellow', 'lime', 'teal']
+            colors = ['green', 'blue', 'red', 'purple', 'orange', 'black', 'magenta', 'yellow', 'lime', 'teal']
 
 	    # Assign light green to a specific category
             # Example: Assign 'lightgreen' to the category 'OK'
-            colors[categories.index('OK')] = 'lightgreen'
+            colors[categories.index('OK')] = 'green'
 		
             # Sidebar filter by Site Name
             search_site_name = st.sidebar.text_input("Enter Site Name")
