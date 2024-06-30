@@ -18,8 +18,22 @@ st.set_page_config(layout="wide")
 # Hide default file uploader text
 hide_file_upload_style = """
     <style>
-    .css-1t1j96h {
-        display: none;
+    .css-1t1j96h, .css-1d391kg {
+        visibility: hidden;
+    }
+    .css-1t1j96h::before, .css-1d391kg::before {
+        content: 'Upload Site Info file';
+        visibility: visible;
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: black;
+    }
+    .css-1t1j96h[data-baseweb="file-uploader"] > div:first-child > div:first-child::before, 
+    .css-1d391kg[data-baseweb="file-uploader"] > div:first-child > div:first-child::before {
+        content: 'Upload TXN Info file';
     }
     </style>
 """
