@@ -33,8 +33,10 @@ if uploaded_file is not None:
         else:
             # Define categories for the legend based on 'Issue' column
             categories = data['Issue'].unique().tolist()
-            colors = ['ligthgreen" , 'blue', 'red', 'green', 'orange', 'purple']  # Adjust colors as needed
-
+            
+            # Extend colors list to accommodate up to 10 categories
+            colors = ['blue', 'red', 'green', 'orange', 'purple', 'cyan', 'magenta', 'yellow', 'lime', 'teal']
+            
             # Sidebar filter by Site Name
             st.sidebar.subheader("Filter by Site Name")
             search_site_name = st.sidebar.text_input("Enter Site Name")
