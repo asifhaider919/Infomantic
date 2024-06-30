@@ -16,9 +16,6 @@ default_chart_height = 300
 # Default date range based on DataFrame if available
 date_range = None
 
-# Variable for vertical line position
-vertical_line_position = None
-
 if uploaded_file is not None:
     # Load the Excel file
     df = pd.read_excel(uploaded_file)
@@ -39,24 +36,14 @@ if uploaded_file is not None:
     if date_range:
         start_date, end_date = st.sidebar.slider(
             "Select Date Range",
-            min_value=df['DateTime'].min(),
-            max_value=df['DateTime'].max(),
-            value=(df['DateTime'].min(), df['DateTime'].max()),
-            format="YYYY-MM-DD HH:mm:ss"
+            min_value=datetime.date(date_range[0]),
+            max_value=datetime.date(date_range[1]),
+            value=(datetime.date(date_range[0]), datetime.date(date_range[1]))
         )
 
-        # Convert start_date and end_date to pandas Timestamp
-        start_date = pd.Timestamp(start_date)
-        end_date = pd.Timestamp(end_date)
-
-        # Slider for vertical line position
-        vertical_line_position = st.sidebar.slider(
-            "Vertical Line Position",
-            min_value=df['DateTime'].min(),
-            max_value=df['DateTime'].max(),
-            value=df['DateTime'].min(),  # Default to minimum date initially
-            format="YYYY-MM-DD HH:mm:ss"
-        )
+        # Convert start_date and end_date to datetime64[ns]
+        start_date = pd.to_datetime(start_date)
+        end_date = pd.to_datetime(end_date)
 
     else:
         st.sidebar.warning("No DateTime column found in the uploaded file.")
@@ -114,10 +101,6 @@ if uploaded_file is not None:
                     xaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                     yaxis=dict(showgrid=False, zeroline=False),  # Hide gridlines and zeroline
                 )
-
-                # Add vertical line to the plot if position is selected
-                if vertical_line_position:
-                    fig.add_vline(x=vertical_line_position, line_width=2, line_dash="dash", line_color="red")
 
                 # Alternate placing charts in col1 and col2
                 if i % 2 == 1:
