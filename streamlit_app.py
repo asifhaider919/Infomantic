@@ -1,60 +1,85 @@
 import streamlit as st
 import pandas as pd
-import xml.etree.ElementTree as ET
+import folium
+from streamlit_folium import folium_static
 
-# Function to parse XML data
-def parse_xml(xml_file):
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-    
-    # Define the namespace dictionary
-    namespaces = {'raml': 'raml20.xsd'}
-    
-    data = []
-    
-    for mo in root.findall('.//raml:managedObject', namespaces):  
-        mo_class = mo.get('class')
-        dist_name = mo.get('distName')
-        id = mo.get('id')
-        
-        # Use namespace in XPath queries
-        name = mo.find("raml:p[@name='name']", namespaces).text
-        old_dn = mo.find("raml:p[@name='oldDN']", namespaces).text
-        bts_name = mo.find("raml:p[@name='btsName']", namespaces).text
-        
-        data.append({
-            'Class': mo_class,
-            'DistName': dist_name,
-            'ID': id,
-            'Name': name,
-            'OldDN': old_dn,
-            'BTSName': bts_name
-        })
-    
-    return data
+# Title of the app
+st.title("Upload File to Plot Sites on Map")
 
-# Streamlit UI
-def main():
-    st.title("XML to Excel Converter")
+# Upload CSV file for site data
+uploaded_file = st.file_uploader("Choose a CSV file", type=["csv", "xls", "xlsx"])
+
+if uploaded_file is not None:
+    # Save the uploaded file
+    with open(f"Input_Data.{uploaded_file.name.split('.')[-1]}", "wb") as f:
+        f.write(uploaded_file.getbuffer())
     
-    # File upload
-    uploaded_file = st.file_uploader("Upload XML File", type=['xml'])
+    st.success(f"File saved as Input_Data.{uploaded_file.name.split('.')[-1]}")
     
-    if uploaded_file is not None:
-        st.write("Parsing XML...")
-        data = parse_xml(uploaded_file)
+    try:
+        # Read the uploaded file into a pandas DataFrame
+        if uploaded_file.name.endswith('.xls') or uploaded_file.name.endswith('.xlsx'):
+            data = pd.read_excel(uploaded_file)
+        else:
+            data = pd.read_csv(uploaded_file)
         
-        # Display parsed data
-        st.write("Parsed Data:")
-        st.write(pd.DataFrame(data))
-        
-        # Save to Excel
-        st.write("Saving to Excel...")
-        df = pd.DataFrame(data)
-        excel_file_path = "parsed_data.xlsx"
-        df.to_excel(excel_file_path, index=False)
-        
-        st.write(f"Excel file saved: [Download Excel file](/{excel_file_path})")
-    
-if __name__ == "__main__":
-    main()
+        # Ensure the required columns are present
+        if 'Lat' not in data.columns or 'Lon' not in data.columns or 'Site' not in data.columns:
+            st.error("The uploaded file must contain 'Site', 'Lat', and 'Lon' columns.")
+        else:
+            # Sidebar filter by Site Name
+            st.sidebar.subheader("Filter by Site Name")
+            search_site_name = st.sidebar.text_input("Enter Site Name")
+            
+            # Create initial map centered around the mean location of all data
+            m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=3)
+
+            # Display markers for filtered data or all data if not filtered
+            if search_site_name:
+                filtered_data = data[data['Site'].str.contains(search_site_name, case=False)]
+                if not filtered_data.empty:
+                    # Calculate bounds to zoom to 10km around the first filtered site
+                    first_site = filtered_data.iloc[0]
+                    bounds = [(first_site['Lat'] - 0.05, first_site['Lon'] - 0.05), 
+                              (first_site['Lat'] + 0.05, first_site['Lon'] + 0.05)]
+                    
+                    for idx, row in data.iterrows():
+                        # Determine marker icon
+                        if row['Site'] in filtered_data['Site'].values:
+                            # Use a custom square icon for filtered sites
+                            icon = folium.Icon(color='red', icon='square', prefix='fa')
+                        else:
+                            # Default symbol for other sites
+                            icon = folium.Icon(color='blue', icon='cloud')
+
+                        # Create a popup message with site information
+                        popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                        f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                        f"<b>Longitude:</b> {row['Lon']}<br>"
+
+                        folium.Marker(
+                            location=[row['Lat'], row['Lon']],
+                            popup=folium.Popup(popup_message, max_width=400),
+                            icon=icon
+                        ).add_to(m)
+                    
+                    # Fit the map to the bounds
+                    m.fit_bounds(bounds)
+            else:
+                for idx, row in data.iterrows():
+                    # Create a popup message with site information
+                    popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
+                                    f"<b>Latitude:</b> {row['Lat']}<br>" \
+                                    f"<b>Longitude:</b> {row['Lon']}<br>"
+
+                    folium.Marker(
+                        location=[row['Lat'], row['Lon']],
+                        popup=folium.Popup(popup_message, max_width=400),
+                        icon=folium.Icon(color='blue', icon='cloud')
+                    ).add_to(m)
+
+            # Display the map in the Streamlit app
+            folium_static(m, width=900, height=700)
+
+    except Exception as e:
+        st.error(f"An error occurred while processing the file: {e}")
