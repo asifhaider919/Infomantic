@@ -38,8 +38,10 @@ if uploaded_file is not None:
                 margin=dict(l=40, r=40, t=40, b=40),  # Adjust margin to add padding
                 paper_bgcolor='rgba(0,0,0,0)',  # Make background transparent
                 plot_bgcolor='rgba(0,0,0,0)',   # Make plot area transparent
-                bordercolor='lightgray',        # Set border color
-                borderwidth=1                   # Set border width
+                showlegend=True,                # Show legend
+                legend=dict(orientation='h', yanchor='top', y=1.1, xanchor='left', x=0.5),  # Legend position
+                plot_bordercolor='lightgray',   # Set plot area border color
+                plot_borderwidth=1              # Set plot area border width
             )
             st.plotly_chart(fig)
     else:
