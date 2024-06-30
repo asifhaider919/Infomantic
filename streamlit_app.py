@@ -23,7 +23,7 @@ if uploaded_file is not None:
     with open(f"Input_Data.{uploaded_file.name.split('.')[-1]}", "wb") as f:
         f.write(uploaded_file.getbuffer())
     
-    st.sidebar.success(f"File saved as Input_Data.{uploaded_file.name.split('.')[-1]}")
+   # st.sidebar.success(f"File saved as Input_Data.{uploaded_file.name.split('.')[-1]}")
     
     try:
         # Read the uploaded file into a pandas DataFrame
