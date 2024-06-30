@@ -52,14 +52,20 @@ if uploaded_file is not None:
     if 'items' in df.columns:
         # Multiselect dropdown for selecting metrics
         all_metrics_option = "All Metrics"
+        available_metrics = df.columns[2:].tolist()
+
+        # Search box for filtering metrics by typing
+        filter_text = st.sidebar.text_input("Filter Metrics", "")
+        filtered_metrics = [metric for metric in available_metrics if filter_text.lower() in metric.lower()]
+
         selected_metrics = st.sidebar.multiselect(
             "Select Metrics",
-            options=[all_metrics_option] + df.columns[2:].tolist(),
+            options=[all_metrics_option] + filtered_metrics,
             default=[all_metrics_option]
         )
 
         if all_metrics_option in selected_metrics:
-            selected_metrics = df.columns[2:].tolist()  # Display all metrics
+            selected_metrics = available_metrics  # Display all metrics
 
         if len(selected_metrics) > 0:
             # Create two columns for displaying charts side by side
