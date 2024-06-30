@@ -129,7 +129,7 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
         # Check for required columns for TXN data
         required_columns_txn = ['Site_A', 'Site_B', 'Lat_A', 'Lon_A', 'Lat_B', 'Lon_B']
         if all(col in txn_data.columns for col in required_columns_txn):
-            # Convert relevant columns to numeric (in case they are not already)
+            # Convert relevant columns to numeric (in case they are not already numeric)
             numeric_columns_txn = ['Lat_A', 'Lon_A', 'Lat_B', 'Lon_B']
             txn_data[numeric_columns_txn] = txn_data[numeric_columns_txn].apply(pd.to_numeric, errors='coerce')
             
@@ -158,3 +158,4 @@ if uploaded_file_site is not None and uploaded_file_txn is not None:
     
     except Exception as e:
         st.sidebar.error(f"An error occurred while processing the file: {e}")
+
