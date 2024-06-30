@@ -72,7 +72,7 @@ if uploaded_file is not None:
                             color=color,
                             fill=True,
                             fill_color=color,
-                            fill_opacity=0.4,
+                            fill_opacity=0,
                             popup=folium.Popup(popup_message, max_width=400)
                         ).add_to(m)
                     
@@ -95,7 +95,7 @@ if uploaded_file is not None:
                         color=color,
                         fill=True,
                         fill_color=color,
-                        fill_opacity=0.4,
+                        fill_opacity=0,
                         popup=folium.Popup(popup_message, max_width=400)
                     ).add_to(m)
 
