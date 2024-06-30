@@ -32,7 +32,7 @@ if uploaded_file is not None:
             search_site_name = st.sidebar.text_input("Enter Site Name")
             
             # Create initial map centered around the mean location of all data
-            m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=3)
+            m = folium.Map(location=[data['Lat'].mean(), data['Lon'].mean()], zoom_start=7)  # Zoom start set to 7
 
             # Display markers for filtered data or all data if not filtered
             if search_site_name:
@@ -46,11 +46,14 @@ if uploaded_file is not None:
                     for idx, row in data.iterrows():
                         # Determine marker icon
                         if row['Site'] in filtered_data['Site'].values:
-                            # Use a marker-dot icon for filtered sites
-                            icon = folium.Icon(color='red', icon='marker-dot')
+                            # Use a custom hexagon icon for filtered sites
+                            icon = folium.CustomIcon(icon_image='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/images/marker-icon.png',
+                                                     icon_size=(30, 42),  # Adjust size as needed
+                                                     icon_anchor=(15, 42),  # Position icon
+                                                     popup_anchor=(0, -42))  # Adjust popup position
                         else:
                             # Default symbol for other sites
-                            icon = folium.Icon(color='blue', icon='marker-dot')
+                            icon = folium.Icon(color='blue', icon='cloud')
 
                         # Create a popup message with site information
                         popup_message = f"<b>Site Name:</b> {row.get('Site', '')}<br>" \
@@ -75,7 +78,7 @@ if uploaded_file is not None:
                     folium.Marker(
                         location=[row['Lat'], row['Lon']],
                         popup=folium.Popup(popup_message, max_width=400),
-                        icon=folium.Icon(color='blue', icon='marker-dot')
+                        icon=folium.Icon(color='blue', icon='cloud')
                     ).add_to(m)
 
             # Display the map in the Streamlit app
